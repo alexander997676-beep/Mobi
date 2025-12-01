@@ -1,26 +1,11 @@
-
-                        <!DOCTYPE html>
-                        <html lang="en">
-                        <head>
-                            <meta charset="UTF-8">
-                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <style>
-                body {
-                  background-color: white; /* Ensure the iframe has a white background */
-                }
-
-                
-              </style>
-                        </head>
-                        <body>
-                            <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="description" content="Ka Mob i — Instant mobile specs lookup powered by GSM Arena API">
-    <title>Ka Mob i | Mobile Info Finder 📱</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📱</text></svg>">
+    <meta name="description" content="Mob i — Instant mobile specs lookup powered by GSM Arena API">
+    <title>Mob i | Mobile Info Finder 📱</title>
+    <link rel="icon" href="image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📱</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         :root {
@@ -29,8 +14,8 @@
             --card-bg: #2a266f;
             --text-primary: #f0f0ff;
             --text-secondary: #b0b0d0;
-            --accent: #ff6b6b;
-            --accent-hover: #ff5252;
+            --accent: #4d6ef6;
+            --accent-hover: #3a56d4;
             --border-radius: 16px;
             --shadow: 0 8px 30px rgba(0,0,0,0.4);
             --transition: all 0.3s ease;
@@ -42,8 +27,8 @@
             --card-bg: #ffffff;
             --text-primary: #212529;
             --text-secondary: #6c757d;
-            --accent: #4d6ef6;
-            --accent-hover: #3a56d4;
+            --accent: #ff6b6b;
+            --accent-hover: #ff5252;
             --shadow: 0 6px 20px rgba(0,0,0,0.08);
         }
 
@@ -75,9 +60,9 @@
         }
 
         .logo {
-            font-size: 2.4rem;
+            font-size: 2.6rem;
             font-weight: 800;
-            background: linear-gradient(90deg, #ff6b6b, #4d6ef6, #51cf66);
+            background: linear-gradient(90deg, #4d6ef6, #51cf66, #ff6b6b);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -358,14 +343,14 @@
             .results-grid {
                 grid-template-columns: 1fr;
             }
-            .logo { font-size: 2rem; }
+            .logo { font-size: 2.1rem; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1 class="logo">Ka Mob i</h1>
+            <h1 class="logo">Mob i</h1>
             <p class="tagline">Search 20,000+ phones • Real-time specs • Powered by GSM Arena</p>
             <button id="themeToggle" class="theme-toggle">
                 <i class="fas fa-moon"></i>
@@ -375,7 +360,7 @@
         <section class="search-section">
             <div class="search-wrapper">
                 <input type="text" id="searchInput" class="search-input" 
-                       placeholder="🔍 Type phone name (e.g., Pixel 8, iPhone 15 Pro)" 
+                       placeholder="🔍 Search any phone (e.g., Pixel 8, iPhone 15)" 
                        autocomplete="off">
                 <button id="searchBtn" class="search-btn">
                     <i class="fas fa-search"></i>
@@ -393,18 +378,17 @@
             </div>
             <div id="resultsGrid" class="results-grid"></div>
             <button id="loadMoreBtn" class="load-more" style="display:none;">
-                <i class="fas fa-plus-circle"></i> Load More Phones
+                <i class="fas fa-plus-circle"></i> Load More
             </button>
         </section>
 
         <footer>
-            <p>© <span id="year">2025</span> Ka Mob i • All data from GSM Arena API</p>
+            <p>© <span id="year">2025</span> Mob i • All data from GSM Arena API</p>
             <p style="margin-top:6px; font-size:0.85rem;">API: <code>api.xyro.site/search/gsmarena</code></p>
         </footer>
     </div>
 
     <script>
-        // DOM Elements
         const searchInput = document.getElementById('searchInput');
         const searchBtn = document.getElementById('searchBtn');
         const themeToggle = document.getElementById('themeToggle');
@@ -415,50 +399,46 @@
         const historyDropdown = document.getElementById('historyDropdown');
         const yearEl = document.getElementById('year');
 
-        // State
         let currentPage = 1;
         let currentQuery = '';
         let allResults = [];
-        const CACHE_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours
+        const CACHE_EXPIRY = 24 * 60 * 60 * 1000;
 
-        // Init
         yearEl.textContent = new Date().getFullYear();
         loadTheme();
         loadHistory();
         handleUrlParams();
 
-        // Theme Toggle
         themeToggle.addEventListener('click', toggleTheme);
         function toggleTheme() {
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
             document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
-            localStorage.setItem('ka-mob-theme', isDark ? 'light' : 'dark');
+            localStorage.setItem('mob-i-theme', isDark ? 'light' : 'dark');
             themeToggle.innerHTML = isDark 
                 ? '<i class="fas fa-sun"></i>' 
                 : '<i class="fas fa-moon"></i>';
         }
 
         function loadTheme() {
-            const saved = localStorage.getItem('ka-mob-theme') || 'dark';
+            const saved = localStorage.getItem('mob-i-theme') || 'dark';
             document.documentElement.setAttribute('data-theme', saved);
             themeToggle.innerHTML = saved === 'dark' 
                 ? '<i class="fas fa-moon"></i>' 
                 : '<i class="fas fa-sun"></i>';
         }
 
-        // History
         function loadHistory() {
-            const history = JSON.parse(localStorage.getItem('ka-mob-history') || '[]');
+            const history = JSON.parse(localStorage.getItem('mob-i-history') || '[]');
             renderHistory(history);
         }
 
         function addToHistory(query) {
             if (!query) return;
-            let history = JSON.parse(localStorage.getItem('ka-mob-history') || '[]');
+            let history = JSON.parse(localStorage.getItem('mob-i-history') || '[]');
             history = history.filter(q => q !== query);
             history.unshift(query);
-            history = history.slice(0, 10); // Keep last 10
-            localStorage.setItem('ka-mob-history', JSON.stringify(history));
+            history = history.slice(0, 10);
+            localStorage.setItem('mob-i-history', JSON.stringify(history));
             renderHistory(history);
         }
 
@@ -482,7 +462,6 @@
             });
         }
 
-        // Search
         searchInput.addEventListener('input', () => {
             if (searchInput.value.trim() === '') {
                 historyDropdown.style.display = 'block';
@@ -518,9 +497,7 @@
                 const url = `https://api.xyro.site/search/gsmarena?q=${encoded}`;
                 
                 const res = await fetch(url, {
-                    headers: {
-                        'Accept': 'application/json'
-                    }
+                    headers: { 'Accept': 'application/json' }
                 });
 
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -539,9 +516,8 @@
             }
         }
 
-        // Caching
         function getFromCache(query) {
-            const key = `ka-mob-cache-${query}`;
+            const key = `mob-i-cache-${query}`;
             const item = localStorage.getItem(key);
             if (!item) return null;
 
@@ -554,19 +530,16 @@
         }
 
         function saveToCache(query, data) {
-            const key = `ka-mob-cache-${query}`;
-            const item = {
+            const key = `mob-i-cache-${query}`;
+            localStorage.setItem(key, JSON.stringify({
                 data,
                 timestamp: Date.now()
-            };
-            localStorage.setItem(key, JSON.stringify(item));
+            }));
         }
 
-        // Results Rendering
         function showLoading() {
             resultsSection.style.display = 'block';
             resultsGrid.innerHTML = '';
-            // Show 3 skeleton cards
             for (let i = 0; i < 3; i++) {
                 resultsGrid.innerHTML += `
                     <div class="skeleton-card">
@@ -584,16 +557,9 @@
         }
 
         function renderResults(data, fresh = true) {
-            if (fresh) {
-                allResults = data;
-                currentPage = 1;
-            } else {
-                allResults = data;
-            }
-
+            if (fresh) allResults = data;
             const displayData = allResults.slice(0, 5);
             resultsGrid.innerHTML = displayData.map(renderPhoneCard).join('');
-            
             loadMoreBtn.style.display = allResults.length > 5 ? 'block' : 'none';
         }
 
@@ -664,7 +630,6 @@
             loadMoreBtn.style.display = 'none';
         }
 
-        // Load More
         loadMoreBtn.addEventListener('click', () => {
             const start = 5;
             const end = Math.min(allResults.length, 10);
@@ -673,15 +638,14 @@
             loadMoreBtn.style.display = end < allResults.length ? 'block' : 'none';
         });
 
-        // Share
         shareBtn.addEventListener('click', async () => {
             const url = new URL(window.location);
             url.searchParams.set('q', currentQuery);
             try {
                 await navigator.clipboard.writeText(url.toString());
-                showNotification('Link copied to clipboard!', 'success');
+                showNotification('Link copied!', 'success');
             } catch (err) {
-                showNotification('Failed to copy link', 'error');
+                showNotification('Failed to copy', 'error');
             }
         });
 
@@ -700,13 +664,9 @@
             `;
             notif.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'times-circle' : 'info-circle'}"></i> ${message}`;
             document.body.appendChild(notif);
-
-            setTimeout(() => {
-                if (notif.parentNode) notif.parentNode.removeChild(notif);
-            }, 3000);
+            setTimeout(() => { if (notif.parentNode) notif.parentNode.removeChild(notif); }, 3000);
         }
 
-        // Handle URL params (e.g., ?q=iphone)
         function handleUrlParams() {
             const urlParams = new URLSearchParams(window.location.search);
             const q = urlParams.get('q');
@@ -716,7 +676,6 @@
             }
         }
 
-        // Auto-hide history on blur
         document.addEventListener('click', (e) => {
             if (!searchInput.contains(e.target) && !historyDropdown.contains(e.target)) {
                 historyDropdown.style.display = 'none';
@@ -726,24 +685,3 @@
 </body>
 </html>
 
-
-
-              <script>
-                              // api/search.js (Edge Function)
-export default async (req) => {
-  const { q } = req.query;
-  const res = await fetch(`https://api.xyro.site/search/gsmarena?q=${q}`, {
-    headers: {
-      'X-API-Key': process.env.API_KEY // Store in env vars
-    }
-  });
-  return new Response(res.body, {
-    headers: { 'Content-Type': 'application/json' }
-  });
-};
-
-
-              </script>
-                        </body>
-                        </html>
-                    
