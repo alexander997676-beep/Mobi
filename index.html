@@ -1,221 +1,418 @@
-<!-- BOOT SCREEN (Start Wala Hissa Updated) -->
-<div id="boot-layer">
-    <!-- Text Updated Here -->
-    <div class="matrix-text">FAZ INFO v9.0</div>
-    <div class="loader-bar"><div class="loader-fill"></div></div>
-</div>
-
-<!-- SIDEBAR SETTINGS -->
-<aside class="sidebar">
-    <div class="logo-icon"><i class="fa-solid fa-atom"></i></div>
-    <div class="theme-dot cyan" onclick="setTheme('cyan')" title="Cyan Theme"></div>
-    <div class="theme-dot purple" onclick="setTheme('purple')" title="Purple Theme"></div>
-    <div class="theme-dot green" onclick="setTheme('green')" title="Green Theme"></div>
-    <div class="theme-dot gold" onclick="setTheme('gold')" title="Gold Theme"></div>
-</aside>
-
-<!-- MAIN AREA -->
-<main class="main-viewport">
-    <div class="header-section">
-        <!-- Header Updated Here -->
-        <h1>FAZ <span style="color:var(--primary)">INFO</span></h1>
-        <div class="subtitle">Next-Gen Specification Database</div>
-    </div>
-
-    <div class="search-container">
-        <input type="text" id="inp" class="search-input" placeholder="Initialize Search Protocol...">
-        <button class="search-btn" onclick="runSearch()"><i class="fa-solid fa-search"></i></button>
-    </div>
-
-    <div class="results-grid" id="grid"></div>
-</main>
-
-<!-- DOCK HISTORY -->
-<div class="dock" id="dock" style="display:none">
-    <div class="dock-label">RECENT</div>
-    <div id="dock-content" style="display:flex; gap:10px;"></div>
-</div>
-
-<!-- HOLOGRAPHIC MODAL -->
-<div class="holo-overlay" id="modal">
-    <div class="holo-interface">
-        <div class="close-holo" onclick="closeModal()">&times;</div>
-        <div class="holo-col-left">
-            <img id="m-img" src="" alt="">
-        </div>
-        <div class="holo-col-right">
-            <h2 id="m-title" class="holo-title"></h2>
-            
-            <!-- VISUAL METERS -->
-            <div class="meter-container">
-                <!-- RAM METER -->
-                <div class="meter-box">
-                    <div class="circle-chart">
-                        <svg width="80" height="80">
-                            <circle class="circle-bg" cx="40" cy="40" r="35"></circle>
-                            <circle class="circle-fill" id="meter-ram" cx="40" cy="40" r="35"></circle>
-                        </svg>
-                        <div class="circle-text" id="txt-ram">0GB</div>
-                    </div>
-                    <div class="meter-label">Memory</div>
-                </div>
-                <!-- BATTERY METER -->
-                <div class="meter-box">
-                    <div class="circle-chart">
-                        <svg width="80" height="80">
-                            <circle class="circle-bg" cx="40" cy="40" r="35"></circle>
-                            <circle class="circle-fill" id="meter-bat" cx="40" cy="40" r="35"></circle>
-                        </svg>
-                        <div class="circle-text" id="txt-bat">0mAh</div>
-                    </div>
-                    <div class="meter-label">Energy</div>
-                </div>
-            </div>
-
-            <p id="m-desc" class="holo-desc"></p>
-
-            <div class="holo-actions">
-                <button class="holo-btn" onclick="speakDetails()">
-                    <i class="fa-solid fa-volume-high"></i> SPEAK
-                </button>
-                <a id="btn-dl" href="#" target="_blank" class="holo-btn">
-                    <i class="fa-solid fa-download"></i> IMAGE
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    // CONFIG
-    const API_URL = "https://api.xyro.site/search/gsmarena?query=";
-    const grid = document.getElementById('grid');
-    const input = document.getElementById('inp');
-    const modal = document.getElementById('modal');
-    const dock = document.getElementById('dock');
-    const dockContent = document.getElementById('dock-content');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAZ INFO | Ultimate OS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Jura:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    let historyList = [];
-    let currentTextToSpeak = "";
-
-    // INIT
-    window.onload = () => {
-        setTimeout(() => { document.getElementById('boot-layer').style.display = 'none'; }, 1600);
-        input.focus();
-    };
-
-    // THEME SWITCHER
-    function setTheme(color) {
-        document.documentElement.setAttribute('data-theme', color);
-    }
-
-    // SEARCH
-    input.addEventListener('keypress', (e) => { if(e.key === 'Enter') runSearch(); });
-
-    async function runSearch(term = null) {
-        const query = term || input.value.trim();
-        if(!query) return;
-        input.value = query;
-
-        grid.innerHTML = `<h3 style="color:var(--primary); margin-top:20px;">SCANNING...</h3>`;
-
-        try {
-            const res = await fetch(API_URL + encodeURIComponent(query));
-            const json = await res.json();
-            
-            grid.innerHTML = "";
-            if(json.data && json.data.length > 0) {
-                json.data.forEach(phone => {
-                    const card = document.createElement('div');
-                    card.className = 'data-card';
-                    card.innerHTML = `
-                        <div class="card-visual"><img src="${phone.thumbnail}" onerror="this.src='https://via.placeholder.com/200'"></div>
-                        <div class="card-data">
-                            <div class="card-title">${phone.name}</div>
-                            <div class="card-meta">${phone.description}</div>
-                        </div>
-                    `;
-                    card.onclick = () => openHolo(phone);
-                    grid.appendChild(card);
-                });
-            } else {
-                grid.innerHTML = `<h3>NO DATA FOUND.</h3>`;
-            }
-        } catch(e) {
-            grid.innerHTML = `<h3>SYSTEM ERROR.</h3>`;
+    <style>
+        /* --- 1. CORE VARIABLES --- */
+        :root {
+            --bg-deep: #050505;
+            --panel-bg: rgba(15, 20, 30, 0.75);
+            --primary: #00f2ff; /* Default: Cyan */
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+            --font-head: 'Orbitron', sans-serif;
+            --font-body: 'Jura', sans-serif;
+            --shadow-glow: 0 0 20px rgba(0, 242, 255, 0.3);
         }
-    }
 
-    // OPEN MODAL & VISUALIZE DATA
-    function openHolo(phone) {
-        addToDock(phone);
+        /* Color Themes */
+        [data-theme="purple"] { --primary: #d946ef; --shadow-glow: 0 0 20px rgba(217, 70, 239, 0.3); }
+        [data-theme="green"] { --primary: #22c55e; --shadow-glow: 0 0 20px rgba(34, 197, 94, 0.3); }
+        [data-theme="gold"] { --primary: #eab308; --shadow-glow: 0 0 20px rgba(234, 179, 8, 0.3); }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-deep);
+            color: white;
+            font-family: var(--font-body);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            background-image: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 60%);
+        }
+
+        /* --- 2. LOADING SCREEN (Start Wala) --- */
+        #boot-layer {
+            position: fixed; inset: 0; background: black; z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            font-family: monospace; color: var(--primary);
+        }
+        .matrix-text { font-size: 2rem; animation: glitch 1s infinite; font-weight: bold; letter-spacing: 2px; }
+        .loader-bar { width: 250px; height: 3px; background: #333; margin-top: 20px; }
+        .loader-fill { height: 100%; width: 0%; background: var(--primary); animation: fillUp 1.5s ease-in-out forwards; }
         
-        document.getElementById('m-title').innerText = phone.name;
-        document.getElementById('m-desc').innerText = phone.description;
-        document.getElementById('m-img').src = phone.thumbnail;
-        document.getElementById('btn-dl').href = phone.thumbnail;
+        @keyframes fillUp { to { width: 100%; } }
 
-        currentTextToSpeak = `${phone.name}. ${phone.description}`;
+        /* --- 3. SIDEBAR (SETTINGS) --- */
+        .sidebar {
+            width: 80px; background: var(--panel-bg); border-right: var(--glass-border);
+            backdrop-filter: blur(15px); display: flex; flex-direction: column; align-items: center;
+            padding: 30px 0; z-index: 100;
+        }
 
-        // VISUALIZE SPECS (Regex Parsing)
-        const ramMatch = phone.description.match(/(\d+)GB RAM/);
-        const batMatch = phone.description.match(/(\d+)mAh/);
+        .logo-icon { font-size: 1.8rem; color: var(--primary); margin-bottom: 50px; text-shadow: var(--shadow-glow); }
         
-        updateMeter('meter-ram', 'txt-ram', ramMatch ? ramMatch[1] : 0, 16); // Max 16GB
-        updateMeter('meter-bat', 'txt-bat', batMatch ? batMatch[1] : 0, 6000); // Max 6000mAh
+        .theme-dot {
+            width: 20px; height: 20px; border-radius: 50%; margin: 10px 0; cursor: pointer;
+            border: 2px solid transparent; transition: 0.3s;
+        }
+        .theme-dot:hover { transform: scale(1.2); }
+        .theme-dot.cyan { background: #00f2ff; }
+        .theme-dot.purple { background: #d946ef; }
+        .theme-dot.green { background: #22c55e; }
+        .theme-dot.gold { background: #eab308; }
 
-        modal.classList.add('active');
-    }
+        /* --- 4. MAIN INTERFACE --- */
+        .main-viewport {
+            flex: 1; display: flex; flex-direction: column; padding: 40px; overflow-y: auto; position: relative;
+        }
 
-    function updateMeter(circleId, textId, value, max) {
-        const circle = document.getElementById(circleId);
-        const text = document.getElementById(textId);
-        const circumference = 2 * Math.PI * 35; // r=35
+        .header-section { margin-bottom: 40px; animation: slideDown 0.8s ease; }
+        .header-section h1 {
+            font-family: var(--font-head); font-size: 3rem; text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .subtitle { color: #888; font-size: 1.1rem; margin-top: 5px; }
+
+        /* SEARCH BAR */
+        .search-container {
+            position: relative; width: 100%; max-width: 600px; margin-top: 30px;
+        }
+        .search-input {
+            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            padding: 20px 60px 20px 25px; border-radius: 12px; color: white; font-size: 1.2rem;
+            font-family: var(--font-body); outline: none; transition: 0.3s;
+        }
+        .search-input:focus { border-color: var(--primary); box-shadow: var(--shadow-glow); background: rgba(0,0,0,0.5); }
         
-        // Calculate percentage
-        const valNum = parseInt(value);
-        const percent = valNum > 0 ? valNum / max : 0;
-        const offset = circumference - (percent * circumference);
+        .search-btn {
+            position: absolute; right: 10px; top: 10px; bottom: 10px; width: 50px;
+            background: var(--primary); color: black; border: none; border-radius: 8px;
+            cursor: pointer; font-size: 1.2rem; transition: 0.2s;
+        }
+        .search-btn:hover { transform: scale(1.05); }
 
-        circle.style.strokeDashoffset = offset;
+        /* GRID */
+        .results-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px;
+            padding-bottom: 120px; /* Space for dock */
+        }
+
+        .data-card {
+            background: var(--panel-bg); border: var(--glass-border); border-radius: 16px;
+            overflow: hidden; cursor: pointer; transition: 0.3s; position: relative;
+            backdrop-filter: blur(10px);
+        }
+        .data-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--primary); opacity: 0; transition: 0.3s;
+        }
+        .data-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-glow); }
+        .data-card:hover::before { opacity: 1; }
+
+        .card-visual {
+            height: 220px; background: radial-gradient(circle, rgba(255,255,255,0.05), transparent);
+            display: flex; align-items: center; justify-content: center; padding: 20px;
+        }
+        .card-visual img { max-width: 100%; max-height: 100%; object-fit: contain; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5)); }
+
+        .card-data { padding: 20px; }
+        .card-title { font-family: var(--font-head); font-size: 1.2rem; margin-bottom: 5px; }
+        .card-meta { font-size: 0.9rem; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* --- 5. HISTORY DOCK --- */
+        .dock {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(10, 10, 10, 0.9); border: var(--glass-border);
+            padding: 10px 20px; border-radius: 20px; display: flex; gap: 15px; align-items: center;
+            backdrop-filter: blur(10px); z-index: 500; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .dock-label { font-size: 0.8rem; color: #666; font-weight: bold; margin-right: 10px; }
+        .dock-item {
+            width: 40px; height: 40px; border-radius: 8px; overflow: hidden; border: 1px solid transparent;
+            cursor: pointer; transition: 0.2s; background: white;
+        }
+        .dock-item:hover { border-color: var(--primary); transform: translateY(-5px) scale(1.1); }
+        .dock-item img { width: 100%; height: 100%; object-fit: contain; }
+
+        /* --- 6. HOLOGRAPHIC MODAL --- */
+        .holo-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000;
+            display: none; align-items: center; justify-content: center; opacity: 0; transition: 0.3s;
+        }
+        .holo-overlay.active { display: flex; opacity: 1; }
+
+        .holo-interface {
+            width: 900px; height: 600px; background: #08090c; border: 1px solid var(--primary);
+            box-shadow: 0 0 60px rgba(0, 242, 255, 0.1); display: flex; position: relative;
+            background-image: linear-gradient(0deg, transparent 24%, rgba(0, 242, 255, .05) 25%, rgba(0, 242, 255, .05) 26%, transparent 27%, transparent 74%, rgba(0, 242, 255, .05) 75%, rgba(0, 242, 255, .05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(0, 242, 255, .05) 25%, rgba(0, 242, 255, .05) 26%, transparent 27%, transparent 74%, rgba(0, 242, 255, .05) 75%, rgba(0, 242, 255, .05) 76%, transparent 77%, transparent);
+            background-size: 50px 50px;
+        }
+
+        .holo-col-left { flex: 1; display: flex; align-items: center; justify-content: center; border-right: var(--glass-border); position: relative; }
+        .holo-col-left img { max-width: 80%; max-height: 80%; object-fit: contain; filter: drop-shadow(0 0 20px rgba(255,255,255,0.1)); }
         
-        if(circleId.includes('ram')) text.innerText = valNum > 0 ? valNum + "GB" : "N/A";
-        else text.innerText = valNum > 0 ? valNum + "mAh" : "N/A";
-    }
+        .holo-col-right { flex: 1.5; padding: 40px; display: flex; flex-direction: column; overflow-y: auto; }
+        .holo-title { font-family: var(--font-head); font-size: 2.5rem; color: white; line-height: 1; margin-bottom: 20px; }
+        .holo-desc { color: #aaa; line-height: 1.6; font-size: 1rem; margin-bottom: 30px; }
 
-    function closeModal() {
-        modal.classList.remove('active');
-        window.speechSynthesis.cancel(); // Stop talking
-    }
+        /* VISUAL METERS */
+        .meter-container { display: flex; gap: 30px; margin-bottom: 30px; }
+        .meter-box { text-align: center; }
+        .circle-chart { width: 80px; height: 80px; position: relative; display: flex; align-items: center; justify-content: center; }
+        .circle-bg { fill: none; stroke: #333; stroke-width: 5; }
+        .circle-fill { fill: none; stroke: var(--primary); stroke-width: 5; stroke-dasharray: 251; stroke-dashoffset: 251; transition: 1s ease-out; transform: rotate(-90deg); transform-origin: center; }
+        .circle-text { position: absolute; font-family: var(--font-head); font-size: 0.8rem; }
+        .meter-label { font-size: 0.8rem; color: var(--primary); margin-top: 10px; text-transform: uppercase; }
 
-    // TEXT TO SPEECH
-    function speakDetails() {
-        window.speechSynthesis.cancel();
-        const speech = new SpeechSynthesisUtterance(currentTextToSpeak);
-        speech.lang = 'en-US';
-        speech.pitch = 0.9;
-        speech.rate = 1;
-        window.speechSynthesis.speak(speech);
-    }
+        .holo-actions { display: flex; gap: 15px; margin-top: auto; }
+        .holo-btn {
+            flex: 1; padding: 15px; background: rgba(0, 242, 255, 0.1); border: 1px solid var(--primary);
+            color: var(--primary); font-family: var(--font-head); cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none;
+        }
+        .holo-btn:hover { background: var(--primary); color: black; box-shadow: 0 0 20px var(--primary); }
 
-    // DOCK HISTORY LOGIC
-    function addToDock(phone) {
-        if(historyList.find(p => p.name === phone.name)) return;
-        
-        historyList.unshift(phone);
-        if(historyList.length > 5) historyList.pop();
+        .close-holo { position: absolute; top: 20px; right: 20px; color: var(--primary); font-size: 1.5rem; cursor: pointer; z-index: 10; }
 
-        dock.style.display = 'flex';
-        dockContent.innerHTML = historyList.map(p => `
-            <div class="dock-item" onclick="openHoloFromDock('${p.name}')">
-                <img src="${p.thumbnail}">
+        @keyframes slideDown { from{opacity:0; transform:translateY(-20px)} to{opacity:1; transform:translateY(0)} }
+        @media(max-width: 900px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; height: 60px; flex-direction: row; justify-content: center; gap: 20px; padding: 0; }
+            .theme-dot { margin: 0; }
+            .logo-icon { margin: 0; margin-right: 20px; }
+            .holo-interface { flex-direction: column; width: 100%; height: 100%; }
+            .holo-col-left { height: 300px; border-right: none; border-bottom: var(--glass-border); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BOOT SCREEN (Start Wala Hissa Updated) -->
+    <div id="boot-layer">
+        <!-- Text Updated Here -->
+        <div class="matrix-text">FAZ INFO v9.0</div>
+        <div class="loader-bar"><div class="loader-fill"></div></div>
+    </div>
+
+    <!-- SIDEBAR SETTINGS -->
+    <aside class="sidebar">
+        <div class="logo-icon"><i class="fa-solid fa-atom"></i></div>
+        <div class="theme-dot cyan" onclick="setTheme('cyan')" title="Cyan Theme"></div>
+        <div class="theme-dot purple" onclick="setTheme('purple')" title="Purple Theme"></div>
+        <div class="theme-dot green" onclick="setTheme('green')" title="Green Theme"></div>
+        <div class="theme-dot gold" onclick="setTheme('gold')" title="Gold Theme"></div>
+    </aside>
+
+    <!-- MAIN AREA -->
+    <main class="main-viewport">
+        <div class="header-section">
+            <!-- Header Updated Here -->
+            <h1>FAZ <span style="color:var(--primary)">INFO</span></h1>
+            <div class="subtitle">Next-Gen Specification Database</div>
+        </div>
+
+        <div class="search-container">
+            <input type="text" id="inp" class="search-input" placeholder="Initialize Search Protocol...">
+            <button class="search-btn" onclick="runSearch()"><i class="fa-solid fa-search"></i></button>
+        </div>
+
+        <div class="results-grid" id="grid"></div>
+    </main>
+
+    <!-- DOCK HISTORY -->
+    <div class="dock" id="dock" style="display:none">
+        <div class="dock-label">RECENT</div>
+        <div id="dock-content" style="display:flex; gap:10px;"></div>
+    </div>
+
+    <!-- HOLOGRAPHIC MODAL -->
+    <div class="holo-overlay" id="modal">
+        <div class="holo-interface">
+            <div class="close-holo" onclick="closeModal()">&times;</div>
+            <div class="holo-col-left">
+                <img id="m-img" src="" alt="">
             </div>
-        `).join('');
-    }
+            <div class="holo-col-right">
+                <h2 id="m-title" class="holo-title"></h2>
+                
+                <!-- VISUAL METERS -->
+                <div class="meter-container">
+                    <!-- RAM METER -->
+                    <div class="meter-box">
+                        <div class="circle-chart">
+                            <svg width="80" height="80">
+                                <circle class="circle-bg" cx="40" cy="40" r="35"></circle>
+                                <circle class="circle-fill" id="meter-ram" cx="40" cy="40" r="35"></circle>
+                            </svg>
+                            <div class="circle-text" id="txt-ram">0GB</div>
+                        </div>
+                        <div class="meter-label">Memory</div>
+                    </div>
+                    <!-- BATTERY METER -->
+                    <div class="meter-box">
+                        <div class="circle-chart">
+                            <svg width="80" height="80">
+                                <circle class="circle-bg" cx="40" cy="40" r="35"></circle>
+                                <circle class="circle-fill" id="meter-bat" cx="40" cy="40" r="35"></circle>
+                            </svg>
+                            <div class="circle-text" id="txt-bat">0mAh</div>
+                        </div>
+                        <div class="meter-label">Energy</div>
+                    </div>
+                </div>
 
-    function openHoloFromDock(name) {
-        const phone = historyList.find(p => p.name === name);
-        if(phone) openHolo(phone);
-    }
+                <p id="m-desc" class="holo-desc"></p>
 
-</script>
+                <div class="holo-actions">
+                    <button class="holo-btn" onclick="speakDetails()">
+                        <i class="fa-solid fa-volume-high"></i> SPEAK
+                    </button>
+                    <a id="btn-dl" href="#" target="_blank" class="holo-btn">
+                        <i class="fa-solid fa-download"></i> IMAGE
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // CONFIG
+        const API_URL = "https://api.xyro.site/search/gsmarena?query=";
+        const grid = document.getElementById('grid');
+        const input = document.getElementById('inp');
+        const modal = document.getElementById('modal');
+        const dock = document.getElementById('dock');
+        const dockContent = document.getElementById('dock-content');
+        
+        let historyList = [];
+        let currentTextToSpeak = "";
+
+        // INIT
+        window.onload = () => {
+            setTimeout(() => { document.getElementById('boot-layer').style.display = 'none'; }, 1600);
+            input.focus();
+        };
+
+        // THEME SWITCHER
+        function setTheme(color) {
+            document.documentElement.setAttribute('data-theme', color);
+        }
+
+        // SEARCH
+        input.addEventListener('keypress', (e) => { if(e.key === 'Enter') runSearch(); });
+
+        async function runSearch(term = null) {
+            const query = term || input.value.trim();
+            if(!query) return;
+            input.value = query;
+
+            grid.innerHTML = `<h3 style="color:var(--primary); margin-top:20px;">SCANNING...</h3>`;
+
+            try {
+                const res = await fetch(API_URL + encodeURIComponent(query));
+                const json = await res.json();
+                
+                grid.innerHTML = "";
+                if(json.data && json.data.length > 0) {
+                    json.data.forEach(phone => {
+                        const card = document.createElement('div');
+                        card.className = 'data-card';
+                        card.innerHTML = `
+                            <div class="card-visual"><img src="${phone.thumbnail}" onerror="this.src='https://via.placeholder.com/200'"></div>
+                            <div class="card-data">
+                                <div class="card-title">${phone.name}</div>
+                                <div class="card-meta">${phone.description}</div>
+                            </div>
+                        `;
+                        card.onclick = () => openHolo(phone);
+                        grid.appendChild(card);
+                    });
+                } else {
+                    grid.innerHTML = `<h3>NO DATA FOUND.</h3>`;
+                }
+            } catch(e) {
+                grid.innerHTML = `<h3>SYSTEM ERROR.</h3>`;
+            }
+        }
+
+        // OPEN MODAL & VISUALIZE DATA
+        function openHolo(phone) {
+            addToDock(phone);
+            
+            document.getElementById('m-title').innerText = phone.name;
+            document.getElementById('m-desc').innerText = phone.description;
+            document.getElementById('m-img').src = phone.thumbnail;
+            document.getElementById('btn-dl').href = phone.thumbnail;
+
+            currentTextToSpeak = `${phone.name}. ${phone.description}`;
+
+            // VISUALIZE SPECS (Regex Parsing)
+            const ramMatch = phone.description.match(/(\d+)GB RAM/);
+            const batMatch = phone.description.match(/(\d+)mAh/);
+            
+            updateMeter('meter-ram', 'txt-ram', ramMatch ? ramMatch[1] : 0, 16); // Max 16GB
+            updateMeter('meter-bat', 'txt-bat', batMatch ? batMatch[1] : 0, 6000); // Max 6000mAh
+
+            modal.classList.add('active');
+        }
+
+        function updateMeter(circleId, textId, value, max) {
+            const circle = document.getElementById(circleId);
+            const text = document.getElementById(textId);
+            const circumference = 2 * Math.PI * 35; // r=35
+            
+            // Calculate percentage
+            const valNum = parseInt(value);
+            const percent = valNum > 0 ? valNum / max : 0;
+            const offset = circumference - (percent * circumference);
+
+            circle.style.strokeDashoffset = offset;
+            
+            if(circleId.includes('ram')) text.innerText = valNum > 0 ? valNum + "GB" : "N/A";
+            else text.innerText = valNum > 0 ? valNum + "mAh" : "N/A";
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            window.speechSynthesis.cancel(); // Stop talking
+        }
+
+        // TEXT TO SPEECH
+        function speakDetails() {
+            window.speechSynthesis.cancel();
+            const speech = new SpeechSynthesisUtterance(currentTextToSpeak);
+            speech.lang = 'en-US';
+            speech.pitch = 0.9;
+            speech.rate = 1;
+            window.speechSynthesis.speak(speech);
+        }
+
+        // DOCK HISTORY LOGIC
+        function addToDock(phone) {
+            if(historyList.find(p => p.name === phone.name)) return;
+            
+            historyList.unshift(phone);
+            if(historyList.length > 5) historyList.pop();
+
+            dock.style.display = 'flex';
+            dockContent.innerHTML = historyList.map(p => `
+                <div class="dock-item" onclick="openHoloFromDock('${p.name}')">
+                    <img src="${p.thumbnail}">
+                </div>
+            `).join('');
+        }
+
+        function openHoloFromDock(name) {
+            const phone = historyList.find(p => p.name === name);
+            if(phone) openHolo(phone);
+        }
+
+    </script>
+</body>
+</html>
