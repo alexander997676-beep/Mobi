@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAZ INFO | NEBULA OS</title>
+    <title>FAZ INFO | Ultimate OS</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Jura:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- 1. NEBULA CORE VARIABLES --- */
+        /* --- 1. CORE VARIABLES --- */
         :root {
             --bg-deep: #050505;
             --panel-bg: rgba(15, 20, 30, 0.75);
@@ -36,14 +36,14 @@
             background-image: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 60%);
         }
 
-        /* --- 2. LOADING SCREEN --- */
+        /* --- 2. LOADING SCREEN (Start Wala) --- */
         #boot-layer {
             position: fixed; inset: 0; background: black; z-index: 9999;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             font-family: monospace; color: var(--primary);
         }
-        .matrix-text { font-size: 1.5rem; animation: glitch 1s infinite; }
-        .loader-bar { width: 200px; height: 2px; background: #333; margin-top: 15px; }
+        .matrix-text { font-size: 2rem; animation: glitch 1s infinite; font-weight: bold; letter-spacing: 2px; }
+        .loader-bar { width: 250px; height: 3px; background: #333; margin-top: 20px; }
         .loader-fill { height: 100%; width: 0%; background: var(--primary); animation: fillUp 1.5s ease-in-out forwards; }
         
         @keyframes fillUp { to { width: 100%; } }
@@ -79,7 +79,7 @@
         }
         .subtitle { color: #888; font-size: 1.1rem; margin-top: 5px; }
 
-        /* NEBULA SEARCH BAR */
+        /* SEARCH BAR */
         .search-container {
             position: relative; width: 100%; max-width: 600px; margin-top: 30px;
         }
@@ -193,9 +193,10 @@
 </head>
 <body>
 
-    <!-- BOOT SCREEN -->
+    <!-- BOOT SCREEN (Start Wala Hissa Updated) -->
     <div id="boot-layer">
-        <div class="matrix-text">NEBULA OS v9.0</div>
+        <!-- Text Updated Here -->
+        <div class="matrix-text">FAZ INFO v9.0</div>
         <div class="loader-bar"><div class="loader-fill"></div></div>
     </div>
 
@@ -211,7 +212,8 @@
     <!-- MAIN AREA -->
     <main class="main-viewport">
         <div class="header-section">
-            <h1>FAZ INFO <span style="color:var(--primary)">NEBULA</span></h1>
+            <!-- Header Updated Here -->
+            <h1>FAZ <span style="color:var(--primary)">INFO</span></h1>
             <div class="subtitle">Next-Gen Specification Database</div>
         </div>
 
