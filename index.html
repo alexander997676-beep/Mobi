@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fezan Faiz Official | Tech Hunter</title>
+    <title>FAIZAN AHMED | Tech Hunter</title>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         /* --- 1. CORE VARIABLES & RESET --- */
@@ -35,6 +35,436 @@
         ::-webkit-scrollbar-track { background: var(--bg-deep); }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        /* --- 2. DYNAMIC BACKGROUND --- */
+        .cyber-grid {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
+            background: 
+                radial-gradient(circle at 15% 50%, rgba(189, 0, 255, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(0, 242, 255, 0.08), transparent 25%);
+        }
+
+        /* --- 3. HEADER (Dynamic) --- */
+        nav {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .brand {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, #fff, var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+
+        .history-btn {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .history-btn:hover { color: white; border-color: var(--primary); }
+
+        /* --- 4. MAIN CONTAINER (Transition Handler) --- */
+        .container {
+            margin-top: 80px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.5s ease;
+            width: 100%;
+        }
+
+        /* State: Home Mode */
+        .container.home-mode {
+            justify-content: center;
+            margin-top: 0;
+            height: 100vh;
+        }
+
+        /* State: Results Mode */
+        .container.results-mode {
+            justify-content: flex-start;
+            padding: 20px 5%;
+        }
+
+        /* Hero Text */
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            transition: all 0.5s ease;
+        }
+        .results-mode .hero-content { display: none; }
+
+        h1 {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
+        }
+
+        .subtitle { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 40px; line-height: 1.6; }
+
+        /* SEARCH BAR (Morphing) */
+        .search-wrapper {
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 22px 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            color: white;
+            font-size: 1.2rem;
+            outline: none;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+        }
+        
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 25px rgba(0, 242, 255, 0.15);
+            background: rgba(0,0,0,0.4);
+        }
+
+        .search-icon {
+            position: absolute; right: 10px; top: 10px; bottom: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .search-icon:hover { transform: scale(1.1); }
+        .search-icon svg { width: 24px; height: 24px; fill: #000; }
+
+        /* RECENT SEARCHES CHIPS */
+        .recent-searches {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            opacity: 1;
+            transition: 0.3s;
+        }
+        .results-mode .recent-searches { display: none; }
+        
+        .chip {
+            background: rgba(255,255,255,0.05);
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: 0.2s;
+        }
+        .chip:hover { border-color: var(--primary); color: white; }
+
+        /* --- 5. GRID & CARDS --- */
+        #results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            width: 100%;
+            max-width: 1400px;
+            margin-top: 40px;
+            opacity: 0; /* Animated in */
+            animation: fadeIn 0.8s forwards;
+        }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        .card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--card-radius);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 40px -10px rgba(0, 242, 255, 0.2);
+        }
+
+        .card-img {
+            background: #fff;
+            height: 260px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card-img img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+        .card-body { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+        .card h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 8px; font-family: 'Exo 2', sans-serif; }
+        .card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* SKELETON LOADER (Shimmer) */
+        .skeleton-card { background: var(--glass); border-radius: var(--card-radius); height: 400px; border: 1px solid var(--glass-border); position: relative; overflow: hidden; }
+        .skeleton-card::after {
+            content: ""; position: absolute; top: 0; right: 0; bottom: 0; left: 0;
+            transform: translateX(-100%);
+            background-image: linear-gradient(90deg, rgba(255,255,255,0) 0, rgba(255,255,255,0.05) 20%, rgba(255,255,255,0.1) 60%, rgba(255,255,255,0));
+            animation: shimmer 2s infinite;
+        }
+        @keyframes shimmer { 100% { transform: translateX(100%); } }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+            z-index: 1000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s;
+        }
+        .modal-overlay.open { display: flex; opacity: 1; }
+        
+        .modal-content {
+            background: #0a0a0a; border: 1px solid var(--glass-border); width: 90%; max-width: 900px;
+            border-radius: 25px; display: flex; overflow: hidden; box-shadow: 0 0 50px rgba(0, 242, 255, 0.1);
+        }
+        
+        .modal-img { flex: 1; background: white; padding: 40px; display: flex; align-items: center; justify-content: center; }
+        .modal-img img { max-width: 100%; max-height: 400px; object-fit: contain; }
+        
+        .modal-details { flex: 1.5; padding: 40px; display: flex; flex-direction: column; }
+        .modal-title { font-family: 'Exo 2'; font-size: 2rem; margin-bottom: 20px; color: white; }
+        .modal-desc { color: var(--text-muted); line-height: 1.7; margin-bottom: 30px; }
+        
+        .btn-group { display: flex; gap: 15px; margin-top: auto; }
+        .btn { flex: 1; padding: 15px; border-radius: 12px; text-align: center; font-weight: 600; text-decoration: none; transition: 0.2s; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), #00c3ff); color: #000; border: none; }
+        .btn-primary:hover { transform: scale(1.02); box-shadow: 0 0 15px var(--primary); }
+        .btn-sec { background: transparent; border: 1px solid var(--glass-border); color: white; }
+        .btn-sec:hover { background: rgba(255,255,255,0.1); }
+        .close-modal { position: absolute; top: 20px; right: 20px; font-size: 2rem; color: white; cursor: pointer; background: none; border: none; }
+
+        @media(max-width: 768px) {
+            .modal-content { flex-direction: column; height: 90vh; overflow-y: scroll; }
+            .modal-img { min-height: 250px; }
+            h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BACKGROUND -->
+    <div class="cyber-grid"></div>
+
+    <!-- HEADER -->
+    <nav>
+        <!-- UPDATED NAME HERE -->
+        <div class="brand">FAIZAN AHMED</div>
+        <button class="history-btn" onclick="clearHistory()">Clear History</button>
+    </nav>
+
+    <!-- MAIN APP CONTAINER -->
+    <div id="app-container" class="container home-mode">
+        
+        <!-- HERO TEXT (Visible only on Home) -->
+        <div class="hero-content">
+            <!-- UPDATED NAME HERE -->
+            <h1>FAIZAN AHMED</h1>
+            <!-- UPDATED TEXT HERE -->
+            <p class="subtitle">Search through thousands of mobile specifications, accurate images, and detailed reviews curated by FAIZAN AHMED.</p>
+        </div>
+
+        <!-- SEARCH BAR (Moves to top on search) -->
+        <div class="search-wrapper">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search device (e.g. Samsung S24 Ultra)...">
+            <button class="search-icon" onclick="performSearch()">
+                <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            </button>
+        </div>
+
+        <!-- RECENT SEARCHES (Visible only on Home) -->
+        <div id="recentChips" class="recent-searches">
+            <!-- Chips injected via JS -->
+        </div>
+
+        <!-- RESULTS GRID -->
+        <div id="results-grid"></div>
+
+    </div>
+
+    <!-- DETAIL MODAL -->
+    <div class="modal-overlay" id="modal">
+        <button class="close-modal" onclick="closeModal()">&times;</button>
+        <div class="modal-content">
+            <div class="modal-img">
+                <img id="m-img" src="" alt="Phone Image">
+            </div>
+            <div class="modal-details">
+                <h2 id="m-title" class="modal-title"></h2>
+                <p id="m-desc" class="modal-desc"></p>
+                <div class="btn-group">
+                    <a id="btn-dl" href="#" target="_blank" class="btn btn-sec">Download Image</a>
+                    <a id="btn-price" href="#" target="_blank" class="btn btn-primary">Check Price</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIG ---
+        const API_URL = "https://api.xyro.site/search/gsmarena?query=";
+        const appContainer = document.getElementById('app-container');
+        const grid = document.getElementById('results-grid');
+        const searchInput = document.getElementById('searchInput');
+        
+        // --- INIT ---
+        window.onload = loadHistory;
+
+        // Enter Key Listener
+        searchInput.addEventListener("keypress", (e) => { if(e.key === "Enter") performSearch(); });
+
+        // --- SEARCH FUNCTION ---
+        async function performSearch(queryText = null) {
+            const query = queryText || searchInput.value.trim();
+            if(!query) return;
+
+            // 1. UI Transitions (Home -> Results)
+            searchInput.value = query; // Ensure input matches if clicked from history
+            appContainer.classList.remove('home-mode');
+            appContainer.classList.add('results-mode');
+            
+            // 2. Save to History
+            addToHistory(query);
+
+            // 3. Show Skeleton Loader
+            renderSkeletons();
+
+            try {
+                const response = await fetch(API_URL + encodeURIComponent(query));
+                const json = await response.json();
+                
+                // 4. Render Data
+                const phones = json.data; // API Dependent
+                grid.innerHTML = ""; // Clear skeletons
+
+                if(phones && phones.length > 0) {
+                    phones.forEach(phone => {
+                        const img = phone.thumbnail; // Using 'thumbnail' as per previous request
+                        const title = phone.name;
+                        const desc = phone.description;
+
+                        const card = document.createElement('div');
+                        card.className = 'card';
+                        card.innerHTML = `
+                            <div class="card-img">
+                                <img src="${img}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x400?text=No+Preview'">
+                            </div>
+                            <div class="card-body">
+                                <h3>${title}</h3>
+                                <p>${desc}</p>
+                            </div>
+                        `;
+                        card.onclick = () => openModal(title, desc, img);
+                        grid.appendChild(card);
+                    });
+                } else {
+                    grid.innerHTML = "<h2 style='text-align:center; width:100%; color:#888'>No devices found.</h2>";
+                }
+            } catch (e) {
+                console.error(e);
+                grid.innerHTML = "<h2 style='text-align:center; width:100%; color:#ff4444'>Connection Error. Try again.</h2>";
+            }
+        }
+
+        // --- SKELETON LOADER UI ---
+        function renderSkeletons() {
+            grid.innerHTML = "";
+            for(let i=0; i<8; i++) {
+                grid.innerHTML += `<div class="skeleton-card"></div>`;
+            }
+        }
+
+        // --- HISTORY LOGIC (LocalStorage) ---
+        function addToHistory(term) {
+            let history = JSON.parse(localStorage.getItem('searchHistory')) || [];
+            if(!history.includes(term)) {
+                history.unshift(term); // Add to beginning
+                if(history.length > 5) history.pop(); // Keep only 5
+                localStorage.setItem('searchHistory', JSON.stringify(history));
+            }
+        }
+
+        function loadHistory() {
+            const history = JSON.parse(localStorage.getItem('searchHistory')) || [];
+            const container = document.getElementById('recentChips');
+            container.innerHTML = "";
+            history.forEach(term => {
+                const chip = document.createElement('div');
+                chip.className = 'chip';
+                chip.innerText = term;
+                chip.onclick = () => performSearch(term);
+                container.appendChild(chip);
+            });
+        }
+
+        function clearHistory() {
+            localStorage.removeItem('searchHistory');
+            document.getElementById('recentChips').innerHTML = "";
+        }
+
+        // --- MODAL LOGIC ---
+        const modal = document.getElementById('modal');
+        function openModal(title, desc, img) {
+            document.getElementById('m-title').innerText = title;
+            document.getElementById('m-desc').innerText = desc;
+            document.getElementById('m-img').src = img;
+            document.getElementById('btn-dl').href = img;
+            document.getElementById('btn-price').href = `https://www.google.com/search?q=${encodeURIComponent(title + ' price')}`;
+            modal.classList.add('open');
+        }
+
+        function closeModal() { modal.classList.remove('open'); }
+        modal.onclick = (e) => { if(e.target === modal) closeModal(); }
+
+    </script>
+</body>
+</html>        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
         /* --- 2. DYNAMIC BACKGROUND --- */
         .cyber-grid {
