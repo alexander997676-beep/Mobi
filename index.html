@@ -3,416 +3,447 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAZ INFO | Hyperion Dashboard</title>
-    <!-- Modern Tech Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <title>FAZ INFO | TITAN OS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;500;700&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- 1. HYPERION THEME VARS --- */
+        /* --- 1. TITAN UNIVERSE CSS --- */
         :root {
-            --bg-body: #050505;
-            --bg-panel: #0e121b;
-            --primary: #3b82f6; /* Blue */
-            --accent: #f59e0b;  /* Amber */
-            --success: #10b981; /* Green */
-            --text-main: #ffffff;
-            --text-muted: #64748b;
-            --border: 1px solid rgba(255,255,255,0.08);
-            --font-head: 'Syncopate', sans-serif;
-            --font-body: 'Outfit', sans-serif;
-            --sidebar-w: 260px;
+            --bg-void: #030305;
+            --neon-blue: #00f3ff;
+            --neon-gold: #ffd700;
+            --neon-purple: #bc13fe;
+            --glass: rgba(20, 30, 50, 0.6);
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+            --font-main: 'Exo 2', sans-serif;
+            --font-tech: 'Rajdhani', sans-serif;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            font-family: var(--font-body);
-            overflow: hidden; /* Dashboard style */
-            height: 100vh;
-            display: flex;
+            background: var(--bg-void);
+            color: white;
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            min-height: 100vh;
         }
 
-        /* --- 2. BOOT SEQUENCE OVERLAY --- */
-        #boot-screen {
-            position: fixed; inset: 0; background: black; z-index: 9999;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            font-family: monospace; color: var(--primary);
+        /* --- 2. PARTICLE CANVAS --- */
+        #starfield {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; pointer-events: none;
         }
-        .boot-text { font-size: 1.2rem; margin-bottom: 10px; }
-        .progress-bar { width: 300px; height: 4px; background: #333; border-radius: 2px; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--primary); width: 0%; animation: load 2s ease-in-out forwards; }
-        @keyframes load { 0% { width: 0%; } 100% { width: 100%; } }
 
-        /* --- 3. SIDEBAR --- */
-        aside {
-            width: var(--sidebar-w); background: var(--bg-panel); border-right: var(--border);
-            display: flex; flex-direction: column; padding: 30px 20px; z-index: 100;
-            transition: 0.3s;
+        /* --- 3. NAVBAR --- */
+        nav {
+            position: fixed; top: 0; width: 100%; z-index: 100;
+            padding: 20px 50px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(3, 3, 5, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: var(--border);
         }
+
         .brand {
-            font-family: var(--font-head); font-weight: 700; font-size: 1.4rem; margin-bottom: 50px;
-            letter-spacing: -1px; display: flex; align-items: center; gap: 10px;
+            font-family: var(--font-tech); font-size: 1.8rem; font-weight: 700;
+            letter-spacing: 2px; color: white; text-transform: uppercase;
+            display: flex; align-items: center; gap: 10px;
         }
-        .brand span { color: var(--primary); }
+        .brand i { color: var(--neon-gold); filter: drop-shadow(0 0 10px var(--neon-gold)); }
+
+        .sys-info {
+            font-family: monospace; color: var(--neon-blue); font-size: 0.8rem;
+            border: var(--border); padding: 5px 15px; border-radius: 20px;
+            background: rgba(0, 243, 255, 0.05);
+        }
+
+        /* --- 4. HERO SECTION --- */
+        .hero {
+            min-height: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 120px 20px 40px; text-align: center; position: relative;
+        }
+
+        .hero h1 {
+            font-size: 4rem; font-weight: 700; text-transform: uppercase;
+            background: linear-gradient(to right, #fff, #888);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 20px; letter-spacing: -2px;
+        }
+
+        .hero p { color: #889; max-width: 600px; font-size: 1.1rem; margin-bottom: 40px; }
+
+        /* Search Bar */
+        .titan-search {
+            width: 100%; max-width: 700px; position: relative;
+            background: rgba(255, 255, 255, 0.03); border: var(--border);
+            border-radius: 12px; padding: 5px; display: flex; align-items: center;
+            transition: 0.3s; box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+        .titan-search:focus-within { border-color: var(--neon-blue); box-shadow: 0 0 30px rgba(0, 243, 255, 0.2); }
+
+        .titan-search input {
+            flex: 1; background: transparent; border: none; padding: 15px 20px;
+            color: white; font-size: 1.2rem; outline: none; font-family: var(--font-main);
+        }
+
+        .titan-btn {
+            background: var(--neon-blue); color: black; border: none; padding: 0 30px;
+            height: 50px; border-radius: 8px; font-weight: 700; cursor: pointer;
+            transition: 0.3s; font-family: var(--font-tech); font-size: 1.1rem;
+        }
+        .titan-btn:hover { background: white; box-shadow: 0 0 20px white; }
+
+        /* BRAND FILTER BAR */
+        .filter-bar {
+            margin-top: 40px; display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;
+        }
+        .brand-chip {
+            background: rgba(255,255,255,0.05); border: var(--border); color: #aaa;
+            padding: 10px 20px; border-radius: 30px; cursor: pointer; transition: 0.3s;
+            font-size: 0.9rem; display: flex; align-items: center; gap: 8px;
+        }
+        .brand-chip:hover, .brand-chip.active {
+            background: var(--neon-purple); color: white; border-color: var(--neon-purple);
+            box-shadow: 0 0 15px rgba(188, 19, 254, 0.4); transform: translateY(-3px);
+        }
+
+        /* --- 5. RESULTS GRID --- */
+        .grid-wrapper {
+            max-width: 1400px; margin: 0 auto; padding: 20px 40px 100px;
+        }
         
-        .menu-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; }
-        .menu-item {
-            display: flex; align-items: center; gap: 12px; padding: 12px 15px;
-            color: #94a3b8; text-decoration: none; border-radius: 10px; margin-bottom: 5px;
-            transition: 0.2s; cursor: pointer;
-        }
-        .menu-item:hover, .menu-item.active { background: rgba(59, 130, 246, 0.1); color: white; }
-        .menu-item i { width: 20px; text-align: center; }
-
-        .sys-status { margin-top: auto; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 12px; border: var(--border); }
-        .sys-row { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 5px; color: var(--text-muted); }
-        .sys-val { color: var(--success); font-family: monospace; }
-
-        /* --- 4. MAIN CONTENT --- */
-        main {
-            flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative;
-        }
-
-        /* Header */
-        header {
-            height: 80px; border-bottom: var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 40px;
-        }
-        .search-area { position: relative; width: 400px; }
-        .search-area input {
-            width: 100%; background: var(--bg-body); border: var(--border); padding: 12px 40px 12px 20px;
-            border-radius: 8px; color: white; outline: none; transition: 0.3s;
-        }
-        .search-area input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); }
-        .search-icon { position: absolute; right: 15px; top: 12px; color: var(--text-muted); }
-
-        /* Content Scroll Area */
-        .content-scroll { flex: 1; overflow-y: auto; padding: 40px; }
-        
-        /* Stats/Hero */
-        .dashboard-hero { margin-bottom: 40px; animation: fadeIn 0.8s; }
-        .dashboard-hero h1 { font-size: 2.5rem; margin-bottom: 10px; }
-        .dashboard-hero p { color: var(--text-muted); max-width: 600px; }
-
-        /* Grid */
         .grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px;
         }
 
-        /* CARD DESIGN */
         .card {
-            background: var(--bg-panel); border: var(--border); border-radius: 16px; overflow: hidden;
-            position: relative; transition: 0.3s; display: flex; flex-direction: column;
+            background: var(--glass); border: var(--border); border-radius: 16px;
+            overflow: hidden; position: relative; transition: 0.4s;
+            display: flex; flex-direction: column; cursor: pointer;
         }
-        .card:hover { transform: translateY(-5px); border-color: var(--primary); }
-        
-        .card-top { height: 220px; background: white; padding: 20px; display: flex; justify-content: center; align-items: center; position: relative; }
-        .card-top img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        
-        .compare-checkbox {
-            position: absolute; top: 10px; right: 10px;
-            width: 24px; height: 24px; border: 2px solid #ddd; border-radius: 6px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; transition: 0.2s;
-        }
-        .compare-checkbox.selected { background: var(--primary); border-color: var(--primary); color: white; }
-
-        .card-body { padding: 20px; display: flex; flex-direction: column; flex: 1; }
-        .card h3 { font-size: 1.1rem; margin-bottom: 10px; }
-        
-        /* AI Score Bar */
-        .score-wrap { margin-top: auto; padding-top: 15px; }
-        .score-label { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px; }
-        .score-track { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
-        .score-bar { height: 100%; background: linear-gradient(90deg, var(--primary), #8b5cf6); width: 0%; transition: 1s; }
-
-        /* --- 5. COMPARE DOCK --- */
-        #compare-dock {
-            position: absolute; bottom: -100px; left: 0; width: 100%;
-            background: rgba(14, 18, 27, 0.95); border-top: 1px solid var(--primary);
-            padding: 20px 40px; display: flex; justify-content: space-between; align-items: center;
-            backdrop-filter: blur(10px); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 500;
-        }
-        #compare-dock.active { bottom: 0; }
-        .dock-items { display: flex; gap: 20px; align-items: center; }
-        .dock-thumb { width: 50px; height: 50px; background: white; border-radius: 8px; padding: 5px; }
-        .dock-thumb img { width: 100%; height: 100%; object-fit: contain; }
-        .vs-badge { font-weight: 800; font-style: italic; color: var(--accent); font-size: 1.2rem; }
-        
-        .btn-compare {
-            background: var(--primary); color: white; padding: 12px 30px; border: none; border-radius: 8px;
-            font-weight: 600; cursor: pointer; letter-spacing: 0.5px;
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--neon-blue);
+            box-shadow: 0 10px 40px rgba(0, 243, 255, 0.1);
         }
 
-        /* --- 6. MODAL --- */
+        .card-img {
+            height: 250px; background: radial-gradient(circle, rgba(255,255,255,0.05), transparent 70%);
+            display: flex; align-items: center; justify-content: center; padding: 20px;
+        }
+        .card-img img { max-width: 100%; max-height: 100%; object-fit: contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); transition: 0.3s; }
+        .card:hover .card-img img { transform: scale(1.1); }
+
+        .card-info { padding: 20px; border-top: var(--border); background: rgba(0,0,0,0.2); flex: 1; }
+        .card h3 { font-family: var(--font-tech); font-size: 1.4rem; margin-bottom: 5px; }
+        .card-desc { font-size: 0.85rem; color: #889; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* Loader */
+        .loader {
+            grid-column: 1 / -1; text-align: center; margin-top: 50px;
+            font-family: monospace; color: var(--neon-blue); letter-spacing: 2px;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        /* --- 6. TABBED MODAL --- */
         .modal-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000;
-            display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px);
+            display: none; align-items: center; justify-content: center; backdrop-filter: blur(10px);
         }
-        .modal-overlay.open { display: flex; }
-        .modal-box {
-            width: 90%; max-width: 1000px; background: var(--bg-panel); border: var(--border); border-radius: 20px;
-            padding: 30px; max-height: 90vh; overflow-y: auto; position: relative;
-        }
-        .modal-close { position: absolute; top: 20px; right: 20px; font-size: 1.5rem; color: white; cursor: pointer; }
-        
-        .comparison-grid { display: grid; grid-template-columns: 1fr 0.2fr 1fr; gap: 20px; margin-top: 20px; }
-        .comp-col { text-align: center; }
-        .comp-img { height: 200px; background: white; border-radius: 10px; padding: 20px; margin-bottom: 15px; }
-        .comp-img img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .comp-desc { text-align: left; font-size: 0.9rem; line-height: 1.6; color: var(--text-muted); background: rgba(255,255,255,0.02); padding: 15px; border-radius: 10px; margin-top: 15px; }
-        
-        .comp-vs { display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--accent); font-weight: 900; }
+        .modal-overlay.active { display: flex; animation: fadeIn 0.3s; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Responsive */
-        @media(max-width: 900px) {
-            body { flex-direction: column; overflow: auto; }
-            aside { width: 100%; padding: 15px; flex-direction: row; justify-content: space-between; align-items: center; }
-            .sys-status, .menu-label { display: none; }
-            .brand { margin-bottom: 0; }
-            main { height: auto; }
-            .comparison-grid { grid-template-columns: 1fr; gap: 40px; }
+        .modal-window {
+            width: 90%; max-width: 1000px; background: #080a10; border: 1px solid var(--neon-blue);
+            border-radius: 20px; display: flex; overflow: hidden; box-shadow: 0 0 50px rgba(0, 243, 255, 0.15);
+            max-height: 90vh; position: relative;
         }
+        
+        /* Left: Image */
+        .m-visual { flex: 1; background: #000; display: flex; align-items: center; justify-content: center; padding: 40px; position: relative; }
+        .m-visual img { max-width: 100%; max-height: 400px; object-fit: contain; }
+        .m-visual::after { content: ''; position: absolute; inset: 0; background: linear-gradient(45deg, rgba(0,243,255,0.05), transparent); pointer-events: none; }
+
+        /* Right: Content */
+        .m-content { flex: 1.5; display: flex; flex-direction: column; }
+        
+        .m-header { padding: 30px; border-bottom: var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .m-title { font-family: var(--font-tech); font-size: 2rem; }
+        
+        /* Tabs */
+        .m-tabs { display: flex; background: rgba(255,255,255,0.02); }
+        .tab-btn {
+            flex: 1; padding: 15px; background: transparent; border: none; border-bottom: 2px solid transparent;
+            color: #889; cursor: pointer; font-family: var(--font-tech); font-size: 1.1rem; transition: 0.3s;
+        }
+        .tab-btn:hover { color: white; background: rgba(255,255,255,0.05); }
+        .tab-btn.active { border-bottom-color: var(--neon-blue); color: var(--neon-blue); background: rgba(0,243,255,0.05); }
+
+        .m-body { padding: 30px; overflow-y: auto; flex: 1; }
+        .tab-pane { display: none; animation: fadeIn 0.3s; }
+        .tab-pane.active { display: block; }
+        
+        /* Spec Grid */
+        .spec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .spec-item { background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px; border: var(--border); }
+        .spec-label { font-size: 0.7rem; color: #889; text-transform: uppercase; }
+        .spec-val { color: white; font-size: 1rem; }
+
+        .m-footer { padding: 20px 30px; border-top: var(--border); display: flex; gap: 15px; }
+        .btn-full { flex: 1; padding: 15px; border-radius: 8px; text-align: center; text-decoration: none; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-primary { background: var(--neon-blue); color: black; border: none; }
+        .btn-primary:hover { box-shadow: 0 0 20px var(--neon-blue); }
+        .btn-sec { border: 1px solid var(--neon-purple); color: white; background: transparent; }
+        .btn-sec:hover { background: var(--neon-purple); }
+
+        .close-m { position: absolute; top: 20px; right: 20px; font-size: 1.5rem; color: white; cursor: pointer; z-index: 10; }
+
+        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+        @media(max-width: 900px) { .modal-window { flex-direction: column; overflow-y: auto; } .m-visual { min-height: 250px; } }
     </style>
 </head>
 <body>
 
-    <!-- 1. BOOT SCREEN -->
-    <div id="boot-screen">
-        <div class="boot-text">INITIALIZING HYPERION CORE...</div>
-        <div class="progress-bar"><div class="progress-fill"></div></div>
+    <!-- BACKGROUND CANVAS -->
+    <canvas id="starfield"></canvas>
+
+    <!-- NAVBAR -->
+    <nav>
+        <div class="brand"><i class="fa-solid fa-layer-group"></i> FAZ<span>INFO</span></div>
+        <div class="sys-info">TITAN OS v5.0 // ONLINE</div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <div class="hero" id="hero-area">
+        <h1>Find Your <span style="color:var(--neon-blue)">Titan</span></h1>
+        <p>Advanced mobile specification database powered by real-time analytics.</p>
+        
+        <div class="titan-search">
+            <input type="text" id="searchInput" placeholder="Search device name..." autocomplete="off">
+            <button class="titan-btn" onclick="execSearch()">SEARCH</button>
+        </div>
+
+        <!-- QUICK FILTER BRANDS -->
+        <div class="filter-bar">
+            <div class="brand-chip" onclick="quickFilter('Apple')"><i class="fa-brands fa-apple"></i> Apple</div>
+            <div class="brand-chip" onclick="quickFilter('Samsung')"><i class="fa-brands fa-android"></i> Samsung</div>
+            <div class="brand-chip" onclick="quickFilter('Xiaomi')">Xiaomi</div>
+            <div class="brand-chip" onclick="quickFilter('OnePlus')">OnePlus</div>
+            <div class="brand-chip" onclick="quickFilter('Google')">Pixel</div>
+        </div>
     </div>
 
-    <!-- 2. SIDEBAR -->
-    <aside>
-        <div class="brand"><i class="fa-solid fa-cube"></i> FAZ<span>INFO</span></div>
-        <div class="menu">
-            <div class="menu-label">Main Menu</div>
-            <div class="menu-item active" onclick="resetView()"><i class="fa-solid fa-grid-2"></i> Dashboard</div>
-            <div class="menu-item"><i class="fa-solid fa-bolt"></i> Trending</div>
-            <div class="menu-item"><i class="fa-solid fa-bookmark"></i> Saved Specs</div>
-        </div>
-        <div class="sys-status">
-            <div class="sys-row"><span>Server</span> <span class="sys-val">ONLINE</span></div>
-            <div class="sys-row"><span>API Latency</span> <span class="sys-val">24ms</span></div>
-            <div class="sys-row"><span>Version</span> <span class="sys-val">v4.0.1</span></div>
-        </div>
-    </aside>
-
-    <!-- 3. MAIN CONTENT -->
-    <main>
-        <header>
-            <div class="search-area">
-                <i class="fa-solid fa-search search-icon"></i>
-                <input type="text" id="searchInput" placeholder="Search Device Database...">
-            </div>
-            <div style="display: flex; gap: 15px; align-items: center;">
-                <i class="fa-solid fa-bell" style="color:var(--text-muted)"></i>
-                <img src="https://ui-avatars.com/api/?name=Faizan+Ahmed&background=3b82f6&color=fff" style="width:35px; border-radius:50%;">
-            </div>
-        </header>
-
-        <div class="content-scroll">
-            <div class="dashboard-hero" id="hero-msg">
-                <h1>Welcome, Faizan.</h1>
-                <p>System ready. Accessing GSMArena database. Select devices to calculate AI Performance Score or compare specifications.</p>
-            </div>
-
-            <div class="grid" id="results-grid">
-                <!-- Results Render Here -->
-            </div>
-        </div>
-    </main>
-
-    <!-- 4. COMPARE DOCK -->
-    <div id="compare-dock">
-        <div class="dock-items" id="dock-items">
-            <!-- Thumbs injected here -->
-        </div>
-        <div style="color:white; margin-left:20px;">
-            <span id="dock-count">0</span>/2 Selected
-        </div>
-        <button class="btn-compare" onclick="openCompareModal()">INITIALIZE COMPARE</button>
+    <!-- RESULTS GRID -->
+    <div class="grid-wrapper">
+        <div class="grid" id="resultsGrid"></div>
     </div>
 
-    <!-- 5. COMPARE MODAL -->
-    <div class="modal-overlay" id="comp-modal">
-        <div class="modal-box">
-            <div class="modal-close" onclick="closeCompareModal()">&times;</div>
-            <h2 style="text-align:center; font-family:var(--font-head); margin-bottom:20px;">Comparison Analysis</h2>
-            <div class="comparison-grid" id="comp-grid">
-                <!-- Comparison Data -->
+    <!-- TABBED MODAL -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-window">
+            <div class="close-m" onclick="closeModal()">&times;</div>
+            
+            <div class="m-visual">
+                <img id="m-img" src="" alt="Device">
+            </div>
+            
+            <div class="m-content">
+                <div class="m-header">
+                    <div class="m-title" id="m-title">Device Name</div>
+                </div>
+
+                <div class="m-tabs">
+                    <button class="tab-btn active" onclick="switchTab('tab-overview', this)">Overview</button>
+                    <button class="tab-btn" onclick="switchTab('tab-specs', this)">Tech Specs</button>
+                    <button class="tab-btn" onclick="switchTab('tab-buy', this)">Market</button>
+                </div>
+
+                <div class="m-body">
+                    <!-- Tab 1: Overview -->
+                    <div id="tab-overview" class="tab-pane active">
+                        <p id="m-desc" style="line-height: 1.6; color: #ccc;"></p>
+                    </div>
+
+                    <!-- Tab 2: Tech Specs (Extracted) -->
+                    <div id="tab-specs" class="tab-pane">
+                        <div class="spec-grid">
+                            <div class="spec-item">
+                                <div class="spec-label">RAM / Storage</div>
+                                <div class="spec-val" id="spec-ram">N/A</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Battery</div>
+                                <div class="spec-val" id="spec-bat">N/A</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Display</div>
+                                <div class="spec-val" id="spec-disp">N/A</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Main Camera</div>
+                                <div class="spec-val" id="spec-cam">N/A</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Market -->
+                    <div id="tab-buy" class="tab-pane">
+                        <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; text-align: center;">
+                            <h3 style="color:var(--neon-gold); margin-bottom: 10px;">Check Availability</h3>
+                            <p style="color:#889; font-size: 0.9rem; margin-bottom: 20px;">Prices vary by region. Click below to scan top retailers.</p>
+                            <a id="btn-check-price" href="#" target="_blank" class="btn-full btn-primary">SEARCH BEST PRICE</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="m-footer">
+                    <a id="btn-dl-img" href="#" target="_blank" class="btn-full btn-sec">Download Wallpaper</a>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // CONFIG
-        const API_URL = "https://api.xyro.site/search/gsmarena?query=";
-        const bootScreen = document.getElementById('boot-screen');
-        const grid = document.getElementById('results-grid');
-        const searchInput = document.getElementById('searchInput');
-        const dock = document.getElementById('compare-dock');
-        
-        // STATE
-        let compareList = [];
+        // --- 1. PARTICLE SYSTEM (TITAN ENGINE) ---
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
 
-        // BOOT SEQUENCE
-        setTimeout(() => {
-            bootScreen.style.opacity = '0';
-            setTimeout(() => bootScreen.style.display = 'none', 500);
-        }, 2200);
-
-        // SEARCH LISTENER
-        searchInput.addEventListener('keypress', (e) => {
-            if(e.key === 'Enter') {
-                performSearch(searchInput.value);
-            }
-        });
-
-        async function performSearch(query) {
-            if(!query) return;
-            
-            grid.innerHTML = `<h3 style="color:white">Searching Database...</h3>`;
-            
-            try {
-                const res = await fetch(API_URL + encodeURIComponent(query));
-                const json = await res.json();
-                renderResults(json.data);
-            } catch (err) {
-                grid.innerHTML = `<h3 style="color:red">Connection Failed.</h3>`;
+        function initParticles() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            particles = [];
+            for(let i=0; i<80; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    size: Math.random() * 2,
+                    speedX: (Math.random() - 0.5) * 0.5,
+                    speedY: (Math.random() - 0.5) * 0.5,
+                    alpha: Math.random()
+                });
             }
         }
 
-        function renderResults(phones) {
-            grid.innerHTML = "";
-            if(!phones || phones.length === 0) {
-                grid.innerHTML = "<h3>No devices found.</h3>";
-                return;
-            }
-
-            phones.forEach(phone => {
-                // Generate AI Score based on keywords
-                const aiScore = calculateAIScore(phone.description);
+        function animateParticles() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = "white";
+            particles.forEach(p => {
+                p.x += p.speedX;
+                p.y += p.speedY;
+                if(p.x < 0) p.x = width;
+                if(p.x > width) p.x = 0;
+                if(p.y < 0) p.y = height;
+                if(p.y > height) p.y = 0;
                 
+                ctx.globalAlpha = p.alpha;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.addEventListener('resize', initParticles);
+        initParticles();
+        animateParticles();
+
+        // --- 2. LOGIC ---
+        const API_BASE = "https://api.xyro.site/search/gsmarena?query=";
+        const grid = document.getElementById('resultsGrid');
+        const searchInput = document.getElementById('searchInput');
+        const modal = document.getElementById('modal');
+
+        // Initial Focus
+        searchInput.focus();
+        searchInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') execSearch(); });
+
+        async function execSearch(queryOverride = null) {
+            const query = queryOverride || searchInput.value.trim();
+            if(!query) return;
+
+            grid.innerHTML = '<div class="loader">SCANNING TITAN DATABASE...</div>';
+            
+            // UI Transition
+            searchInput.value = query;
+
+            try {
+                const res = await fetch(API_BASE + encodeURIComponent(query));
+                const json = await res.json();
+                
+                if(json.data && json.data.length > 0) {
+                    renderGrid(json.data);
+                } else {
+                    grid.innerHTML = '<div class="loader" style="color:#aaa">NO DATA FOUND IN SECTOR.</div>';
+                }
+            } catch (e) {
+                grid.innerHTML = '<div class="loader" style="color:#f00">CONNECTION FAILURE. RETRY.</div>';
+            }
+        }
+
+        function quickFilter(brand) {
+            execSearch(brand);
+        }
+
+        function renderGrid(phones) {
+            grid.innerHTML = "";
+            phones.forEach(phone => {
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
-                    <div class="card-top">
-                        <div class="compare-checkbox" onclick="toggleCompare(this, '${phone.name}', '${phone.thumbnail}', \`${phone.description}\`)">
-                            <i class="fa-solid fa-plus"></i>
-                        </div>
-                        <img src="${phone.thumbnail}" onerror="this.src='https://via.placeholder.com/200'">
+                    <div class="card-img">
+                        <img src="${phone.thumbnail}" onerror="this.src='https://via.placeholder.com/300x300?text=No+Preview'">
                     </div>
-                    <div class="card-body">
+                    <div class="card-info">
                         <h3>${phone.name}</h3>
-                        <div class="score-wrap">
-                            <div class="score-label">
-                                <span>AI Performance</span>
-                                <span>${aiScore}%</span>
-                            </div>
-                            <div class="score-track">
-                                <div class="score-bar" style="width:${aiScore}%"></div>
-                            </div>
-                        </div>
+                        <p class="card-desc">${phone.description}</p>
                     </div>
                 `;
+                card.onclick = () => openTitanModal(phone);
                 grid.appendChild(card);
             });
         }
 
-        // FAKE AI SCORE ALGORITHM
-        function calculateAIScore(desc) {
-            let score = 60; // Base score
-            if(desc.includes('GB RAM')) {
-                const ram = parseInt(desc.match(/(\d+)GB RAM/)?.[1] || 4);
-                score += ram * 2;
-            }
-            if(desc.includes('mAh')) score += 10;
-            if(desc.includes('5G')) score += 5;
-            if(desc.includes('Pro') || desc.includes('Ultra')) score += 10;
-            return Math.min(score, 100);
-        }
-
-        // COMPARE LOGIC
-        function toggleCompare(btn, name, img, desc) {
-            // Check if already selected
-            const index = compareList.findIndex(p => p.name === name);
+        // --- 3. MODAL & REGEX EXTRACTION ---
+        function openTitanModal(phone) {
+            document.getElementById('m-title').innerText = phone.name;
+            document.getElementById('m-desc').innerText = phone.description;
+            document.getElementById('m-img').src = phone.thumbnail;
             
-            if(index > -1) {
-                // Remove
-                compareList.splice(index, 1);
-                btn.classList.remove('selected');
-                btn.innerHTML = '<i class="fa-solid fa-plus"></i>';
-            } else {
-                // Add
-                if(compareList.length >= 2) {
-                    alert("Comparison limit reached (Max 2). Deselect one to add another.");
-                    return;
-                }
-                compareList.push({name, img, desc});
-                btn.classList.add('selected');
-                btn.innerHTML = '<i class="fa-solid fa-check"></i>';
-            }
-            updateDock();
+            // Buttons
+            document.getElementById('btn-check-price').href = `https://www.google.com/search?q=${phone.name} price`;
+            document.getElementById('btn-dl-img').href = phone.thumbnail;
+
+            // Regex Spec Extraction (Simulated AI)
+            const desc = phone.description;
+            document.getElementById('spec-ram').innerText = extractSpec(desc, /(\d+GB RAM)/) || "Check Details";
+            document.getElementById('spec-bat').innerText = extractSpec(desc, /(\d+mAh)/) || "Check Details";
+            document.getElementById('spec-disp').innerText = extractSpec(desc, /(\d+\.\d+")/) || "Check Details";
+            document.getElementById('spec-cam').innerText = extractSpec(desc, /(\d+MP)/) || "Check Details";
+
+            // Reset Tab
+            switchTab('tab-overview', document.querySelector('.tab-btn'));
+            modal.classList.add('active');
         }
 
-        function updateDock() {
-            const dockItems = document.getElementById('dock-items');
-            document.getElementById('dock-count').innerText = compareList.length;
+        function extractSpec(text, regex) {
+            const match = text.match(regex);
+            return match ? match[1] : null;
+        }
+
+        function closeModal() { modal.classList.remove('active'); }
+
+        function switchTab(tabId, btn) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             
-            dockItems.innerHTML = compareList.map(p => `
-                <div class="dock-thumb"><img src="${p.img}"></div>
-            `).join(compareList.length === 2 ? '<div class="vs-badge">VS</div>' : '');
-
-            if(compareList.length > 0) {
-                dock.classList.add('active');
-            } else {
-                dock.classList.remove('active');
-            }
-        }
-
-        function openCompareModal() {
-            if(compareList.length < 2) {
-                alert("Please select 2 devices to compare.");
-                return;
-            }
-            
-            const compGrid = document.getElementById('comp-grid');
-            const p1 = compareList[0];
-            const p2 = compareList[1];
-
-            compGrid.innerHTML = `
-                <div class="comp-col">
-                    <div class="comp-img"><img src="${p1.img}"></div>
-                    <h3>${p1.name}</h3>
-                    <div class="comp-desc">${p1.desc}</div>
-                    <button class="btn-compare" style="margin-top:10px; width:100%; background:#222;">Score: ${calculateAIScore(p1.desc)}</button>
-                </div>
-                <div class="comp-vs">VS</div>
-                <div class="comp-col">
-                    <div class="comp-img"><img src="${p2.img}"></div>
-                    <h3>${p2.name}</h3>
-                    <div class="comp-desc">${p2.desc}</div>
-                    <button class="btn-compare" style="margin-top:10px; width:100%; background:#222;">Score: ${calculateAIScore(p2.desc)}</button>
-                </div>
-            `;
-            
-            document.getElementById('comp-modal').classList.add('open');
-        }
-
-        function closeCompareModal() {
-            document.getElementById('comp-modal').classList.remove('open');
-        }
-        
-        function resetView() {
-            searchInput.value = "";
-            grid.innerHTML = "";
-            document.getElementById('hero-msg').style.display = "block";
+            // Show selected
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
         }
 
     </script>
