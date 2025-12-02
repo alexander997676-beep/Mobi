@@ -3,463 +3,451 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAZ INFO | Tech Hunter</title>
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>FAZ INFO | Ultimate Tech Spec</title>
+    <!-- Tech Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        /* --- 1. CORE VARIABLES & RESET --- */
+        /* --- 1. CONFIG & VARIABLES --- */
         :root {
-            --bg-deep: #050505;
-            --primary: #00f2ff; /* Cyan Neon */
-            --accent: #bd00ff;  /* Purple Neon */
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
+            --bg-color: #030407;
+            --card-bg: rgba(20, 25, 40, 0.6);
+            --primary: #00e5ff; /* Cyan */
+            --secondary: #7000ff; /* Purple */
             --text-main: #ffffff;
-            --text-muted: #888888;
-            --card-radius: 20px;
+            --text-muted: #94a3b8;
+            --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+            --font-tech: 'Rajdhani', sans-serif;
+            --font-body: 'Inter', sans-serif;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-deep);
+            background-color: var(--bg-color);
             color: var(--text-main);
-            min-height: 100vh;
+            font-family: var(--font-body);
             overflow-x: hidden;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-deep); }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
-
-        /* --- 2. DYNAMIC BACKGROUND --- */
-        .cyber-grid {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
+        /* --- 2. ANIMATED BACKGROUND --- */
+        .ambient-light {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
             background: 
-                radial-gradient(circle at 15% 50%, rgba(189, 0, 255, 0.08), transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(0, 242, 255, 0.08), transparent 25%);
+                radial-gradient(circle at 20% 20%, rgba(112, 0, 255, 0.15), transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(0, 229, 255, 0.15), transparent 40%);
+            animation: pulseLight 10s infinite alternate;
         }
+        @keyframes pulseLight { 0% { opacity: 0.5; } 100% { opacity: 1; } }
 
-        /* --- 3. HEADER (Dynamic) --- */
+        /* --- 3. NAVBAR --- */
         nav {
-            padding: 20px 40px;
+            padding: 20px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 100;
-            background: rgba(5, 5, 5, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--glass-border);
-            transition: all 0.3s ease;
+            position: fixed; top: 0; width: 100%; z-index: 100;
+            backdrop-filter: blur(15px);
+            border-bottom: var(--glass-border);
+            background: rgba(3, 4, 7, 0.7);
         }
 
         .brand {
-            font-family: 'Exo 2', sans-serif;
-            font-size: 1.5rem;
+            font-family: var(--font-tech);
+            font-size: 2rem;
             font-weight: 700;
-            letter-spacing: 1px;
-            background: linear-gradient(90deg, #fff, var(--text-muted));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
-        }
-
-        .history-btn {
-            background: transparent;
-            border: 1px solid var(--glass-border);
-            color: var(--text-muted);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .history-btn:hover { color: white; border-color: var(--primary); }
-
-        /* --- 4. MAIN CONTAINER (Transition Handler) --- */
-        .container {
-            margin-top: 80px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: all 0.5s ease;
-            width: 100%;
-        }
-
-        /* State: Home Mode */
-        .container.home-mode {
-            justify-content: center;
-            margin-top: 0;
-            height: 100vh;
-        }
-
-        /* State: Results Mode */
-        .container.results-mode {
-            justify-content: flex-start;
-            padding: 20px 5%;
-        }
-
-        /* Hero Text */
-        .hero-content {
-            text-align: center;
-            max-width: 800px;
-            transition: all 0.5s ease;
-        }
-        .results-mode .hero-content { display: none; }
-
-        h1 {
-            font-family: 'Exo 2', sans-serif;
-            font-size: 3.5rem;
-            font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 2px;
-            margin-bottom: 15px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
-        }
-
-        .subtitle { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 40px; line-height: 1.6; }
-
-        /* SEARCH BAR (Morphing) */
-        .search-wrapper {
-            width: 100%;
-            max-width: 600px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 22px 30px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            border-radius: 50px;
             color: white;
-            font-size: 1.2rem;
-            outline: none;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s;
-            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+            text-shadow: 0 0 15px var(--primary);
+            display: flex; align-items: center; gap: 10px;
         }
-        
-        .search-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 25px rgba(0, 242, 255, 0.15);
-            background: rgba(0,0,0,0.4);
+        .brand i { color: var(--primary); }
+
+        .nav-actions { display: flex; gap: 15px; }
+        .icon-btn {
+            background: rgba(255,255,255,0.05); border: var(--glass-border); color: white;
+            width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.3s;
+        }
+        .icon-btn:hover { background: var(--primary); color: black; box-shadow: 0 0 15px var(--primary); }
+
+        /* --- 4. HERO SECTION --- */
+        .container {
+            margin-top: 100px;
+            flex: 1; display: flex; flex-direction: column; align-items: center;
+            width: 100%; max-width: 1400px; align-self: center; padding: 0 20px;
+            transition: 0.5s ease-in-out;
         }
 
-        .search-icon {
-            position: absolute; right: 10px; top: 10px; bottom: 10px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            color: #000;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .search-icon:hover { transform: scale(1.1); }
-        .search-icon svg { width: 24px; height: 24px; fill: #000; }
+        /* Mode Switching */
+        .container.home-mode { height: 80vh; justify-content: center; margin-top: 0; }
+        .results-mode .hero-text { display: none; }
 
-        /* RECENT SEARCHES CHIPS */
-        .recent-searches {
-            margin-top: 20px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-            opacity: 1;
+        .hero-text { text-align: center; max-width: 800px; margin-bottom: 40px; animation: fadeInUp 0.8s ease; }
+        .hero-text h1 {
+            font-family: var(--font-tech); font-size: 4.5rem; line-height: 1; text-transform: uppercase;
+            background: linear-gradient(to right, #fff, var(--text-muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .hero-text p { color: var(--text-muted); font-size: 1.2rem; margin-top: 15px; letter-spacing: 1px; }
+        .highlight { color: var(--primary); font-weight: 600; }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- 5. SEARCH INTERFACE --- */
+        .search-box-wrapper {
+            position: relative; width: 100%; max-width: 650px; z-index: 10;
+        }
+        .search-input {
+            width: 100%; padding: 25px 30px; border-radius: 15px;
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+            color: white; font-size: 1.3rem; font-family: var(--font-tech); outline: none;
+            backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             transition: 0.3s;
         }
-        .results-mode .recent-searches { display: none; }
+        .search-input:focus { border-color: var(--primary); box-shadow: 0 0 30px rgba(0, 229, 255, 0.2); }
         
+        .search-btn-float {
+            position: absolute; right: 10px; top: 10px; bottom: 10px;
+            background: var(--primary); color: black; border: none; padding: 0 30px;
+            border-radius: 10px; font-weight: 700; font-family: var(--font-tech); font-size: 1.1rem;
+            cursor: pointer; transition: 0.3s;
+        }
+        .search-btn-float:hover { background: white; box-shadow: 0 0 20px white; }
+
+        /* History Chips */
+        .history-chips {
+            display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; justify-content: center;
+        }
+        .results-mode .history-chips { display: none; }
         .chip {
-            background: rgba(255,255,255,0.05);
-            padding: 5px 15px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            cursor: pointer;
-            border: 1px solid transparent;
-            transition: 0.2s;
+            padding: 8px 15px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px; font-size: 0.9rem; color: var(--text-muted); cursor: pointer; transition: 0.3s;
         }
-        .chip:hover { border-color: var(--primary); color: white; }
+        .chip:hover { border-color: var(--secondary); color: white; transform: translateY(-2px); }
 
-        /* --- 5. GRID & CARDS --- */
-        #results-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px;
-            width: 100%;
-            max-width: 1400px;
-            margin-top: 40px;
-            opacity: 0; /* Animated in */
-            animation: fadeIn 0.8s forwards;
+        /* --- 6. RESULTS GRID --- */
+        #results-area {
+            width: 100%; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px; margin-top: 50px; padding-bottom: 50px;
         }
-        @keyframes fadeIn { to { opacity: 1; } }
 
+        /* 3D TILT CARD */
         .card {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--card-radius);
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            flex-direction: column;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            border-color: var(--primary);
-            box-shadow: 0 10px 40px -10px rgba(0, 242, 255, 0.2);
-        }
-
-        .card-img {
-            background: #fff;
-            height: 260px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .card-img img { max-width: 100%; max-height: 100%; object-fit: contain; }
-
-        .card-body { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
-        .card h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 8px; font-family: 'Exo 2', sans-serif; }
-        .card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-
-        /* SKELETON LOADER (Shimmer) */
-        .skeleton-card { background: var(--glass); border-radius: var(--card-radius); height: 400px; border: 1px solid var(--glass-border); position: relative; overflow: hidden; }
-        .skeleton-card::after {
-            content: ""; position: absolute; top: 0; right: 0; bottom: 0; left: 0;
-            transform: translateX(-100%);
-            background-image: linear-gradient(90deg, rgba(255,255,255,0) 0, rgba(255,255,255,0.05) 20%, rgba(255,255,255,0.1) 60%, rgba(255,255,255,0));
-            animation: shimmer 2s infinite;
-        }
-        @keyframes shimmer { 100% { transform: translateX(100%); } }
-
-        /* MODAL */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
-            z-index: 1000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s;
-        }
-        .modal-overlay.open { display: flex; opacity: 1; }
-        
-        .modal-content {
-            background: #0a0a0a; border: 1px solid var(--glass-border); width: 90%; max-width: 900px;
-            border-radius: 25px; display: flex; overflow: hidden; box-shadow: 0 0 50px rgba(0, 242, 255, 0.1);
+            background: var(--card-bg); border: var(--glass-border); border-radius: 20px;
+            overflow: hidden; position: relative; transition: transform 0.1s;
+            cursor: pointer; transform-style: preserve-3d; perspective: 1000px;
+            display: flex; flex-direction: column;
         }
         
-        .modal-img { flex: 1; background: white; padding: 40px; display: flex; align-items: center; justify-content: center; }
-        .modal-img img { max-width: 100%; max-height: 400px; object-fit: contain; }
-        
-        .modal-details { flex: 1.5; padding: 40px; display: flex; flex-direction: column; }
-        .modal-title { font-family: 'Exo 2'; font-size: 2rem; margin-bottom: 20px; color: white; }
-        .modal-desc { color: var(--text-muted); line-height: 1.7; margin-bottom: 30px; }
-        
-        .btn-group { display: flex; gap: 15px; margin-top: auto; }
-        .btn { flex: 1; padding: 15px; border-radius: 12px; text-align: center; font-weight: 600; text-decoration: none; transition: 0.2s; }
-        .btn-primary { background: linear-gradient(135deg, var(--primary), #00c3ff); color: #000; border: none; }
-        .btn-primary:hover { transform: scale(1.02); box-shadow: 0 0 15px var(--primary); }
-        .btn-sec { background: transparent; border: 1px solid var(--glass-border); color: white; }
-        .btn-sec:hover { background: rgba(255,255,255,0.1); }
-        .close-modal { position: absolute; top: 20px; right: 20px; font-size: 2rem; color: white; cursor: pointer; background: none; border: none; }
+        .card:hover { border-color: var(--primary); }
 
-        @media(max-width: 768px) {
-            .modal-content { flex-direction: column; height: 90vh; overflow-y: scroll; }
-            .modal-img { min-height: 250px; }
-            h1 { font-size: 2.5rem; }
+        .card-image-box {
+            height: 250px; background: radial-gradient(circle at center, rgba(255,255,255,0.1), transparent);
+            display: flex; align-items: center; justify-content: center; padding: 20px;
+        }
+        .card-image-box img { max-height: 100%; max-width: 100%; object-fit: contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); transition: 0.3s; }
+        .card:hover .card-image-box img { transform: scale(1.1) translateZ(20px); }
+
+        .card-content { padding: 20px; transform: translateZ(10px); flex: 1; display: flex; flex-direction: column; }
+        .card-title { font-family: var(--font-tech); font-size: 1.5rem; margin-bottom: 10px; }
+        
+        /* Specs Badges */
+        .specs-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+        .spec-badge {
+            font-size: 0.75rem; padding: 4px 8px; border-radius: 4px; font-weight: 600;
+            background: rgba(255,255,255,0.05); color: #ccc; border: 1px solid rgba(255,255,255,0.1);
+        }
+        .spec-badge.ram { color: #a5f3fc; border-color: #0891b2; background: rgba(8, 145, 178, 0.1); }
+        .spec-badge.bat { color: #fde047; border-color: #ca8a04; background: rgba(202, 138, 4, 0.1); }
+
+        .card-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* Skeletons */
+        .skeleton { height: 400px; background: rgba(255,255,255,0.05); border-radius: 20px; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 0.8; } 100% { opacity: 0.5; } }
+
+        /* --- 7. MODAL --- */
+        .modal-wrap {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px);
+            z-index: 200; display: none; align-items: center; justify-content: center; opacity: 0; transition: 0.3s;
+        }
+        .modal-wrap.active { display: flex; opacity: 1; }
+        
+        .modal-box {
+            background: #0f111a; border: 1px solid var(--secondary); width: 95%; max-width: 1000px;
+            border-radius: 25px; display: flex; overflow: hidden; box-shadow: 0 0 50px rgba(112, 0, 255, 0.3);
+            position: relative; flex-wrap: wrap;
+        }
+
+        .m-left { flex: 1; min-width: 300px; background: radial-gradient(circle, rgba(255,255,255,0.05), transparent); display: flex; align-items: center; justify-content: center; padding: 40px; }
+        .m-left img { max-width: 100%; max-height: 400px; filter: drop-shadow(0 0 30px rgba(0,0,0,0.5)); }
+
+        .m-right { flex: 1.5; padding: 40px; min-width: 300px; display: flex; flex-direction: column; }
+        .m-title { font-family: var(--font-tech); font-size: 2.5rem; color: white; margin-bottom: 20px; text-transform: uppercase; }
+        .m-desc { color: var(--text-muted); line-height: 1.7; font-size: 1.05rem; margin-bottom: 30px; border-left: 3px solid var(--primary); padding-left: 20px; }
+
+        .action-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: auto; }
+        .act-btn {
+            padding: 15px; border-radius: 10px; font-weight: 600; text-align: center; text-decoration: none; font-family: var(--font-tech); letter-spacing: 1px; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;
+        }
+        .btn-1 { background: var(--primary); color: black; border: none; }
+        .btn-1:hover { box-shadow: 0 0 20px var(--primary); }
+        
+        .btn-2 { background: transparent; border: 1px solid var(--secondary); color: white; }
+        .btn-2:hover { background: var(--secondary); }
+        
+        .btn-3 { background: #222; color: white; border: none; }
+        .btn-3:hover { background: #333; }
+
+        .close-m { position: absolute; top: 20px; right: 20px; font-size: 24px; color: white; background: none; border: none; cursor: pointer; }
+
+        @media(max-width: 800px) {
+            .hero-text h1 { font-size: 3rem; }
+            .modal-box { flex-direction: column; height: 90vh; overflow-y: auto; }
+            .action-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <!-- BACKGROUND -->
-    <div class="cyber-grid"></div>
+    <div class="ambient-light"></div>
 
-    <!-- HEADER -->
+    <!-- NAVIGATION -->
     <nav>
-        <!-- UPDATED BRAND NAME HERE -->
-        <div class="brand">FAZ INFO</div>
-        <button class="history-btn" onclick="clearHistory()">Clear History</button>
+        <div class="brand">
+            <i class="fa-solid fa-bolt"></i> FAZ INFO
+        </div>
+        <div class="nav-actions">
+            <button class="icon-btn" onclick="clearHistory()" title="Clear History"><i class="fa-solid fa-trash"></i></button>
+            <button class="icon-btn" onclick="location.reload()" title="Reset"><i class="fa-solid fa-house"></i></button>
+        </div>
     </nav>
 
-    <!-- MAIN APP CONTAINER -->
-    <div id="app-container" class="container home-mode">
+    <!-- MAIN APP -->
+    <div id="main-container" class="container home-mode">
         
-        <!-- HERO TEXT (Visible only on Home) -->
-        <div class="hero-content">
-            <!-- UPDATED TITLE HERE -->
-            <h1>FAZ INFO</h1>
-            <p class="subtitle">Search through thousands of mobile specifications, accurate images, and detailed reviews curated by FAIZAN AHMED.</p>
+        <!-- HERO TEXT -->
+        <div class="hero-text">
+            <h1>FAZ INFO <br><span style="font-size: 2rem; color:var(--primary)">TECH DATABASE</span></h1>
+            <p>Curated by <span class="highlight">FAIZAN AHMED</span>. <br>Access specifications, HD renders, and market data.</p>
         </div>
 
-        <!-- SEARCH BAR (Moves to top on search) -->
-        <div class="search-wrapper">
-            <input type="text" id="searchInput" class="search-input" placeholder="Search device (e.g. Samsung S24 Ultra)...">
-            <button class="search-icon" onclick="performSearch()">
-                <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-            </button>
+        <!-- SEARCH -->
+        <div class="search-box-wrapper">
+            <input type="text" id="inp" class="search-input" placeholder="Search Model (e.g. iPhone 15 Pro)...">
+            <button class="search-btn-float" onclick="runSearch()">SEARCH</button>
         </div>
 
-        <!-- RECENT SEARCHES (Visible only on Home) -->
-        <div id="recentChips" class="recent-searches">
-            <!-- Chips injected via JS -->
-        </div>
+        <!-- HISTORY -->
+        <div id="chips-area" class="history-chips"></div>
 
-        <!-- RESULTS GRID -->
-        <div id="results-grid"></div>
+        <!-- RESULTS -->
+        <div id="results-area"></div>
 
     </div>
 
-    <!-- DETAIL MODAL -->
-    <div class="modal-overlay" id="modal">
-        <button class="close-modal" onclick="closeModal()">&times;</button>
-        <div class="modal-content">
-            <div class="modal-img">
-                <img id="m-img" src="" alt="Phone Image">
+    <!-- MODAL POPUP -->
+    <div id="modal" class="modal-wrap">
+        <div class="modal-box">
+            <button class="close-m" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            <div class="m-left">
+                <img id="m-img" src="" alt="">
             </div>
-            <div class="modal-details">
-                <h2 id="m-title" class="modal-title"></h2>
-                <p id="m-desc" class="modal-desc"></p>
-                <div class="btn-group">
-                    <a id="btn-dl" href="#" target="_blank" class="btn btn-sec">Download Image</a>
-                    <a id="btn-price" href="#" target="_blank" class="btn btn-primary">Check Price</a>
+            <div class="m-right">
+                <h2 id="m-title" class="m-title"></h2>
+                <div id="m-desc" class="m-desc"></div>
+                
+                <div class="action-grid">
+                    <a id="lnk-price" href="#" target="_blank" class="act-btn btn-1">
+                        <i class="fa-solid fa-tag"></i> CHECK PRICE
+                    </a>
+                    <a id="lnk-img" href="#" target="_blank" class="act-btn btn-2">
+                        <i class="fa-solid fa-download"></i> HD IMAGE
+                    </a>
+                    <button id="btn-share" onclick="shareContent()" class="act-btn btn-3">
+                        <i class="fa-solid fa-share-nodes"></i> SHARE
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // --- CONFIG ---
-        const API_URL = "https://api.xyro.site/search/gsmarena?query=";
-        const appContainer = document.getElementById('app-container');
-        const grid = document.getElementById('results-grid');
-        const searchInput = document.getElementById('searchInput');
+        // API CONFIG
+        const API = "https://api.xyro.site/search/gsmarena?query=";
         
-        // --- INIT ---
+        // DOM ELEMENTS
+        const container = document.getElementById('main-container');
+        const resultsArea = document.getElementById('results-area');
+        const chipsArea = document.getElementById('chips-area');
+        const input = document.getElementById('inp');
+        const modal = document.getElementById('modal');
+
+        // CURRENT PHONE DATA (For Sharing)
+        let currentPhone = {};
+
+        // INITIALIZE
         window.onload = loadHistory;
+        input.addEventListener('keypress', (e) => { if(e.key === 'Enter') runSearch(); });
 
-        // Enter Key Listener
-        searchInput.addEventListener("keypress", (e) => { if(e.key === "Enter") performSearch(); });
+        // --- CORE FUNCTIONS ---
 
-        // --- SEARCH FUNCTION ---
-        async function performSearch(queryText = null) {
-            const query = queryText || searchInput.value.trim();
+        async function runSearch(term = null) {
+            const query = term || input.value.trim();
             if(!query) return;
 
-            // 1. UI Transitions (Home -> Results)
-            searchInput.value = query; // Ensure input matches if clicked from history
-            appContainer.classList.remove('home-mode');
-            appContainer.classList.add('results-mode');
-            
-            // 2. Save to History
-            addToHistory(query);
+            // UI UPDATE
+            input.value = query;
+            container.classList.remove('home-mode');
+            container.classList.add('results-mode');
+            saveHistory(query);
 
-            // 3. Show Skeleton Loader
-            renderSkeletons();
+            // SKELETON LOADERS
+            resultsArea.innerHTML = Array(4).fill('<div class="skeleton"></div>').join('');
 
             try {
-                const response = await fetch(API_URL + encodeURIComponent(query));
-                const json = await response.json();
-                
-                // 4. Render Data
-                const phones = json.data; // API Dependent
-                grid.innerHTML = ""; // Clear skeletons
+                const req = await fetch(API + encodeURIComponent(query));
+                const res = await req.json();
+                const phones = res.data; // API structure
+
+                resultsArea.innerHTML = "";
 
                 if(phones && phones.length > 0) {
-                    phones.forEach(phone => {
-                        const img = phone.thumbnail; // Using 'thumbnail'
-                        const title = phone.name;
-                        const desc = phone.description;
-
-                        const card = document.createElement('div');
-                        card.className = 'card';
-                        card.innerHTML = `
-                            <div class="card-img">
-                                <img src="${img}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x400?text=No+Preview'">
-                            </div>
-                            <div class="card-body">
-                                <h3>${title}</h3>
-                                <p>${desc}</p>
-                            </div>
-                        `;
-                        card.onclick = () => openModal(title, desc, img);
-                        grid.appendChild(card);
-                    });
+                    phones.forEach(phone => createCard(phone));
                 } else {
-                    grid.innerHTML = "<h2 style='text-align:center; width:100%; color:#888'>No devices found.</h2>";
+                    resultsArea.innerHTML = "<h3 style='grid-column:1/-1; text-align:center;'>No devices found.</h3>";
                 }
-            } catch (e) {
-                console.error(e);
-                grid.innerHTML = "<h2 style='text-align:center; width:100%; color:#ff4444'>Connection Error. Try again.</h2>";
+
+            } catch (error) {
+                resultsArea.innerHTML = "<h3 style='color:red; text-align:center;'>API Error. Please try again.</h3>";
             }
         }
 
-        // --- SKELETON LOADER UI ---
-        function renderSkeletons() {
-            grid.innerHTML = "";
-            for(let i=0; i<8; i++) {
-                grid.innerHTML += `<div class="skeleton-card"></div>`;
+        // --- CARD CREATION WITH 3D TILT & BADGES ---
+        function createCard(phone) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            
+            // Extract Specs logic (Simple Parsing)
+            const specs = parseSpecs(phone.description);
+            
+            card.innerHTML = `
+                <div class="card-image-box">
+                    <img src="${phone.thumbnail}" onerror="this.src='https://via.placeholder.com/300?text=No+Img'">
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">${phone.name}</h3>
+                    <div class="specs-row">
+                        ${specs.map(s => `<span class="spec-badge ${s.type}">${s.text}</span>`).join('')}
+                    </div>
+                    <p class="card-desc">${phone.description}</p>
+                </div>
+            `;
+
+            // 3D Tilt Event Listeners
+            card.addEventListener('mousemove', handleTilt);
+            card.addEventListener('mouseleave', resetTilt);
+
+            // Click to Open Modal
+            card.onclick = () => openModal(phone);
+            
+            resultsArea.appendChild(card);
+        }
+
+        // --- HELPER: SPEC PARSER ---
+        function parseSpecs(desc) {
+            // Tries to find RAM and Battery in string
+            let badges = [];
+            const parts = desc.split(',');
+            
+            parts.forEach(part => {
+                if(part.includes('RAM')) badges.push({text: part.trim(), type: 'ram'});
+                if(part.includes('mAh')) badges.push({text: part.trim(), type: 'bat'});
+            });
+
+            // If nothing found, just take first item (usually display size)
+            if(badges.length === 0 && parts.length > 0) {
+                badges.push({text: parts[0].trim(), type: ''});
+            }
+            return badges.slice(0, 3); // Max 3 badges
+        }
+
+        // --- 3D TILT LOGIC ---
+        function handleTilt(e) {
+            const card = this;
+            const cardRect = card.getBoundingClientRect();
+            const x = e.clientX - cardRect.left;
+            const y = e.clientY - cardRect.top;
+            
+            const centerX = cardRect.width / 2;
+            const centerY = cardRect.height / 2;
+            
+            const rotateX = ((y - centerY) / centerY) * -10; // Max 10deg rotation
+            const rotateY = ((x - centerX) / centerX) * 10;
+
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+        }
+
+        function resetTilt() {
+            this.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale(1)`;
+        }
+
+        // --- MODAL LOGIC ---
+        function openModal(phone) {
+            currentPhone = phone; // Save for sharing
+            document.getElementById('m-title').innerText = phone.name;
+            document.getElementById('m-desc').innerText = phone.description;
+            document.getElementById('m-img').src = phone.thumbnail;
+            
+            document.getElementById('lnk-price').href = `https://www.google.com/search?q=${phone.name} price`;
+            document.getElementById('lnk-img').href = phone.thumbnail;
+            
+            modal.classList.add('active');
+        }
+
+        function closeModal() { modal.classList.remove('active'); }
+
+        // --- SHARE FEATURE ---
+        async function shareContent() {
+            const shareData = {
+                title: 'Check out ' + currentPhone.name,
+                text: `Look at this phone: ${currentPhone.name}\n${currentPhone.description}`,
+                url: window.location.href
+            };
+            
+            if(navigator.share) {
+                try { await navigator.share(shareData); } catch(err) {}
+            } else {
+                alert("Sharing not supported on this browser/device. Copying details to clipboard...");
+                navigator.clipboard.writeText(shareData.text);
             }
         }
 
-        // --- HISTORY LOGIC (LocalStorage) ---
-        function addToHistory(term) {
-            let history = JSON.parse(localStorage.getItem('searchHistory')) || [];
+        // --- HISTORY LOGIC ---
+        function saveHistory(term) {
+            let history = JSON.parse(localStorage.getItem('faz_history')) || [];
             if(!history.includes(term)) {
-                history.unshift(term); // Add to beginning
-                if(history.length > 5) history.pop(); // Keep only 5
-                localStorage.setItem('searchHistory', JSON.stringify(history));
+                history.unshift(term);
+                if(history.length > 6) history.pop();
+                localStorage.setItem('faz_history', JSON.stringify(history));
             }
         }
 
         function loadHistory() {
-            const history = JSON.parse(localStorage.getItem('searchHistory')) || [];
-            const container = document.getElementById('recentChips');
-            container.innerHTML = "";
-            history.forEach(term => {
-                const chip = document.createElement('div');
-                chip.className = 'chip';
-                chip.innerText = term;
-                chip.onclick = () => performSearch(term);
-                container.appendChild(chip);
-            });
+            let history = JSON.parse(localStorage.getItem('faz_history')) || [];
+            chipsArea.innerHTML = history.map(t => `<div class="chip" onclick="runSearch('${t}')">${t}</div>`).join('');
         }
 
         function clearHistory() {
-            localStorage.removeItem('searchHistory');
-            document.getElementById('recentChips').innerHTML = "";
+            localStorage.removeItem('faz_history');
+            chipsArea.innerHTML = "";
         }
-
-        // --- MODAL LOGIC ---
-        const modal = document.getElementById('modal');
-        function openModal(title, desc, img) {
-            document.getElementById('m-title').innerText = title;
-            document.getElementById('m-desc').innerText = desc;
-            document.getElementById('m-img').src = img;
-            document.getElementById('btn-dl').href = img;
-            document.getElementById('btn-price').href = `https://www.google.com/search?q=${encodeURIComponent(title + ' price')}`;
-            modal.classList.add('open');
-        }
-
-        function closeModal() { modal.classList.remove('open'); }
-        modal.onclick = (e) => { if(e.target === modal) closeModal(); }
 
     </script>
 </body>
